@@ -1,0 +1,24 @@
+# Build artifacts
+dist/
+build/
+__pycache__/
+*.pyc
+
+# PyInstaller
+*.manifest
+test_exe_font.spec
+
+# Test outputs
+test/
+test_output.*
+
+# Reference images (contain customer data)
+gazou/
+
+# Dev tools / logs
+.playwright-cli/
+tools/
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,61 @@
+{
+  "erase_zones": [
+    {"name": "仕様ブロック", "type": "fill", "x": 3760, "y": 2960, "w": 1800, "h": 1200}
+  ],
+
+  "text_erase_zones": {
+    "注釈": "数字テキスト部分のみ白塗り。寸法線はそのまま保持。H=横書きに変更したため幅広・高さ小のゾーン。",
+    "base_standard": [
+      {"name": "H_front_top_530",  "x": 524,  "y": 1098, "w": 130, "h": 130},
+      {"name": "H_inner_top_500",  "x": 772,  "y": 1121, "w": 130, "h": 130},
+      {"name": "H_side_out_530",   "x": 3728, "y": 1085, "w": 130, "h": 140},
+      {"name": "H_side_in_500",    "x": 3907, "y": 1117, "w": 130, "h": 150},
+      {"name": "H_front_bot_530",  "x": 524,  "y": 3352, "w": 130, "h": 150},
+      {"name": "H_inner_bot_500",  "x": 758,  "y": 3458, "w": 130, "h": 150},
+
+      {"name": "W_top_20_left",    "x": 1083, "y": 2023, "w": 115, "h": 90},
+      {"name": "W_top_739",        "x": 1969, "y": 2023, "w": 149, "h": 90},
+      {"name": "W_top_20_right",   "x": 2890, "y": 2023, "w": 115, "h": 90},
+      {"name": "W_top_779",        "x": 1969, "y": 2183, "w": 149, "h": 90},
+      {"name": "W_top_spanline",   "x": 1050, "y": 2096, "w": 2000, "h": 300},
+
+      {"name": "W_bot_739",        "x": 1967, "y": 4267, "w": 149, "h": 102},
+      {"name": "W_bot_20_left",    "x": 1083, "y": 4267, "w": 115, "h":  98},
+      {"name": "W_bot_20_right",   "x": 2885, "y": 4267, "w": 115, "h":  98},
+      {"name": "W_bot_779",        "x": 1967, "y": 4441, "w": 149, "h":  98},
+      {"name": "W_bot_spanline",   "x": 1050, "y": 4128, "w": 2000, "h": 540},
+
+      {"name": "D_side_450",       "x": 4614, "y": 2103, "w": 153, "h": 90}
+    ]
+  },
+
+  "dim_text": {
+    "注釈": "H寸法は横書き(draw.text)。char_pitchは不要。",
+    "W_inner_top": {"x": 1994, "y": 2048, "font_size": 50, "color": [255, 0, 0]},
+    "W_total_top": {"x": 1994, "y": 2208, "font_size": 50, "color": [255, 0, 0]},
+    "W_inner":     {"x": 1992, "y": 4292, "font_size": 50, "color": [255, 0, 0]},
+    "W_total":     {"x": 1992, "y": 4466, "font_size": 50, "color": [255, 0, 0]},
+    "D_side":      {"x": 4639, "y": 2128, "font_size": 50, "color": [255, 0, 0]},
+    "H_front_top": {"x": 554,  "y": 1118, "font_size": 55, "color": [255, 0, 0]},
+    "H_inner_top": {"x": 802,  "y": 1141, "font_size": 55, "color": [255, 0, 0]},
+    "H_front_bot": {"x": 554,  "y": 3382, "font_size": 55, "color": [255, 0, 0]},
+    "H_inner_bot": {"x": 788,  "y": 3488, "font_size": 55, "color": [255, 0, 0]},
+    "H_side_out":  {"x": 3758, "y": 1115, "font_size": 55, "color": [255, 0, 0]},
+    "H_side_in":   {"x": 3937, "y": 1152, "font_size": 55, "color": [255, 0, 0]}
+  },
+
+  "filler_text": {
+    "W_inner_top_left":  {"x": 1108, "y": 2048, "font_size": 50, "color": [255, 0, 0]},
+    "W_inner_top_right": {"x": 2915, "y": 2048, "font_size": 50, "color": [255, 0, 0]},
+    "W_inner_bot_left":  {"x": 1108, "y": 4292, "font_size": 50, "color": [255, 0, 0]},
+    "W_inner_bot_right": {"x": 2910, "y": 4296, "font_size": 50, "color": [255, 0, 0]}
+  },
+
+  "spec_block": {
+    "x": 3900, "y": 3018, "line_height": 88, "font_size": 80, "color": [0, 0, 0]
+  },
+
+  "hanger_pipe_line": {
+    "y": 1650, "x1": 1160, "x2": 2040, "width": 4
+  }
+}

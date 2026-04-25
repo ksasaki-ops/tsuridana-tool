@@ -1,0 +1,358 @@
+<svg x="0" y="0" width="1286" height="909" viewBox="0 0 1286 909" version="1.1" xmlns="http://www.w3.org/2000/svg" style="display: block;margin-left: auto;margin-right: auto;">
+<defs>
+<clipPath id="c_1"><path d="M0,0H1286V909H0Z"/></clipPath>
+<style>
+text { white-space: pre; }
+path, image { pointer-events: none; }
+
+.s0{font-size:13.75px;font-family:CIDFont-F1_8;fill:#D00;}
+.s1{font-size:21.27px;font-family:CIDFont-F1_8;fill:#000;}
+.s2{font-size:21.27px;font-family:CIDFont-F2_g;fill:#000;}
+.s3{font-size:13.75px;font-family:CIDFont-F1_8;fill:#00D;}
+.s4{font-size:9.17px;font-family:CIDFont-F2_g;fill:#F00;}
+.s5{font-size:18.33px;font-family:CIDFont-F2_g;fill:#000;}
+
+.g0{fill:none;stroke:#D00;stroke-width:3.116;stroke-linecap:round;stroke-linejoin:round;}
+.g1{fill:none;stroke:#D00;stroke-width:0.916;stroke-linecap:round;stroke-linejoin:round;}
+.g2{fill:#FFF;}
+.g3{fill:none;stroke:#000;stroke-width:3.116;stroke-linecap:round;stroke-linejoin:round;}
+.g4{fill:#BBB;}
+.g5{fill:none;stroke:#000;stroke-width:0.572;stroke-linecap:round;stroke-linejoin:round;}
+.g6{fill:none;stroke:#00D;stroke-width:3.116;stroke-linecap:round;stroke-linejoin:round;}
+.g7{fill:#00D;}
+.g8{fill:none;stroke:#00D;stroke-width:0.572;stroke-linecap:round;stroke-linejoin:round;}
+.g9{fill:none;stroke:#F00;stroke-width:3.116;stroke-linecap:round;stroke-linejoin:round;}
+.ga{fill:none;stroke:#F00;stroke-width:0.916;stroke-linecap:round;stroke-linejoin:round;}
+.gb{fill:none;stroke:#000;stroke-width:0.916;stroke-linecap:round;stroke-linejoin:round;}
+
+</style>
+
+</defs>
+<path d="M0 0V909H1286V0Z" fill="#FFFFFF" stroke="none"/>
+<g clip-path="url(#c_1)">
+
+<!-- ===== filler-right-front: 右フィラー+20mm寸法（正面図）===== -->
+<g id="filler-right-front">
+<path fill-rule="evenodd" d="M546.3 90.9V344.3h7.9V90.9h-7.9Z" class="g2"/>
+<path d="M546.3 90.9v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v5.9m0 0h7.9m0 0V330.6m0-9.2V293.9m0-9.2v-3.1m0-6.1V248m0-9.1V211.4m0-9.2v-3.1m0-6.1V165.5m0-9.1V128.9m0-9.2v-3.1m0-6.1V90.9m0 0h-7.9" class="g3"/>
+<path d="M546.3 357.7v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v17.2m7.9-106.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v23.6m-14.6-13.7h6.7m7.9 0H561" class="g0"/>
+<path d="M551.3 438.7l-9.7 9.7m7.7 0l9.7-9.7" class="g1"/>
+<path d="M546.3 443.7h7.9" class="g0"/>
+<path fill-rule="evenodd" d="M543.4 422.9h13.7v13.8H543.4V422.9Z" class="g2"/>
+<text x="543.4" y="434.9" dx="0 .1" class="s0">20 </text>
+</g>
+
+<!-- ===== filler-right-bottom: 右フィラー+20mm寸法（底面図）===== -->
+<g id="filler-right-bottom">
+<path fill-rule="evenodd" d="M545.6 521.9V775.3h7.7V521.9h-7.7Z" class="g2"/>
+<path d="M545.6 521.9v27.5m0 9.2v27.5m0 9.2v3.1m0 6.1V632m0 9.1v27.5m0 9.2v3.1m0 6.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v5.8m0 0h7.7m0 0V761.4m0-9.2V724.7m0-9.2v-3.1m0-6V678.9m0-9.2V642.2m0-9.2v-3.1m0-6V596.4m0-9.2V559.7m0-9.1v-3.2m0-6V521.9m0 0h-7.7" class="g3"/>
+<path d="M554.2 782.1v27.5m0 9.2v27.5m0 2.9v.4m-7.9-67.5v27.5m0 9.2v27.5m0 2.9v.4M561 835.8h-6.8m-7.9 0h-6.7" class="g0"/>
+<path d="M549.3 840.8l9.7-9.7m-7.7 0l-9.7 9.7" class="g1"/>
+<path d="M554.2 835.8h-7.9" class="g0"/>
+<path fill-rule="evenodd" d="M543.4 815.3h13.7V829H543.4V815.3Z" class="g2"/>
+<text x="543.4" y="827" dx="0 .1" class="s0">20 </text>
+</g>
+
+<!-- ===== filler-left-bottom: 左フィラー+20mm寸法（底面図）===== -->
+<g id="filler-left-bottom">
+<path fill-rule="evenodd" d="M213.8 521.9V775.3h-7.7V521.9h7.7Z" class="g2"/>
+<path d="M213.8 521.9v27.5m0 9.2v27.5m0 9.2v3.1m0 6.1V632m0 9.1v27.5m0 9.2v3.1m0 6.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v5.8m0 0h-7.7m0 0V761.4m0-9.2V724.7m0-9.2v-3.1m0-6V678.9m0-9.2V642.2m0-9.2v-3.1m0-6V596.4m0-9.2V559.7m0-9.1v-3.2m0-6V521.9m0 0h7.7" class="g3"/>
+<path d="M205.1 782.1v27.5m0 9.2v27.5m0 2.9v.4m7.7-67.5v27.5m0 9.2v27.5m0 2.9v.4m-14.6-13.8h6.9m7.7 0h7" class="g0"/>
+<path d="M209.9 831.1l-9.7 9.7m7.9 0l9.7-9.7" class="g1"/>
+<path d="M205.1 835.8h7.7" class="g0"/>
+<path fill-rule="evenodd" d="M202.2 815.3H216V829H202.2V815.3Z" class="g2"/>
+<text x="202.2" y="827" dx="0 .1" class="s0">20 </text>
+</g>
+
+<!-- ===== filler-left-front: 左フィラー+20mm寸法（正面図）===== -->
+<g id="filler-left-front">
+<path fill-rule="evenodd" d="M212.8 90.9V344.3h-7.7V90.9h7.7Z" class="g2"/>
+<path d="M212.8 90.9v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v5.9m0 0h-7.7m0 0V330.4m0-9.2V293.7m0-9.2v-3.1m0-6V247.9m0-9.2V211.2m0-9.2v-3.1m0-6V165.4m0-9.2V128.7m0-9.2v-3.1m0-6V90.9m0 0h7.7" class="g3"/>
+<path d="M212.8 357.7v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v17.2m-7.7-106.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v23.6m14.7-13.7h-7m-7.7 0h-6.9" class="g0"/>
+<path d="M208.1 448.4l9.7-9.7m-7.9 0l-9.7 9.7" class="g1"/>
+<path d="M212.8 443.7h-7.7" class="g0"/>
+<path fill-rule="evenodd" d="M202.2 422.9H216v13.8H202.2V422.9Z" class="g2"/>
+<text x="202.2" y="434.9" dx="0 .1" class="s0">20 </text>
+</g>
+
+<!-- ===== 仕様テキストブロック ===== -->
+<path fill-rule="evenodd" d="M736.1 569.1H962V800H736.1V569.1Z" class="g2"/>
+<text x="736.1" y="587.6" class="s1">洗濯機上吊戸棚 </text>
+<text x="736.1" y="608.9" class="s1">W760xD450xH600 </text>
+<text x="736.1" y="630.3" class="s1">扉：TE-SN2560 </text>
+<text x="736.1" y="651.7" class="s1">内部・棚板：白ポリ </text>
+<text x="736.1" y="673" class="s1">棚板一枚ダボ可動式 </text>
+<text x="736.1" y="694.5" class="s1">耐震ラッチ付き </text>
+<text x="736.1" y="715.9" class="s1">差し込みダボ </text>
+<text x="736.1" y="737.2" class="s1">上部・左・右 </text>
+<text x="838.8" y="737.2" class="s1">フィラー付き </text>
+<text x="736.1" y="758.6" class="s1">底面：仕上 </text>
+<text x="824.6" y="758.6" class="s2">白 </text>
+<text x="736.1" y="780.1" class="s2">ハンガーパイプ付き </text>
+<text x="736.1" y="801.5" class="s2">ハンガーパイプを隠すようの扉延長 </text>
+
+<!-- ===== グレー縦棒（底面図上部エリア） ===== -->
+<g id="filler-left-gray-top">
+<path d="M212.8 775.3H220v29h-7.2Z" class="g4"/>
+<path d="M212.8 775.3H220m0 0v20.4m-.5 8.6h-6.7m0 0V783.4" class="g3"/>
+</g>
+<g id="filler-right-gray-top">
+<path d="M539.2 775.3h7.1v29h-7.1Z" class="g4"/>
+<path d="M539.2 775.3h7.1m0 0v20.4m-.5 8.6h-6.6m0 0V783.4" class="g3"/>
+</g>
+
+<!-- ===== ハンガーパイプ（底面図） ===== -->
+<g id="hanger-pipe-bottom">
+<path d="M220 796.6H539.2v7.1H220Z" class="g4"/>
+<path d="M220 796.6h27.5m9.2 0h27.5m9.1 0h3.2m6 0H330m9.2 0h27.5m9.1 0H379m6 0h27.5m9.2 0h27.5m9.1 0h3.2m6 0H495m9.2 0h27.5m7.1 0h.4m0 7.1h-3.1m-6.1 0H502.5m-9.2 0H465.8m-9.1 0h-3.1m-6.1 0H420m-9.2 0H383.4m-9.2 0h-3.1m-6.1 0H337.5m-9.1 0H300.8m-9.1 0h-3.1m-6.1 0H255m-9.2 0H220m0 0v-1.6" class="g3"/>
+</g>
+
+<!-- ===== ハンガーパイプ（側面図） ===== -->
+<g id="hanger-pipe">
+<path d="M880 344.3h13v29H880Z" class="g4"/>
+<path d="M880 344.3h13m0 0v14.5m0 9.1v5.4m0 0H880m0 0v-9.2m0-9.2v-3.1m0-6v-1.5" class="g3"/>
+</g>
+
+<!-- ===== 正面図：天板・枠 ===== -->
+<path d="M212.8 90.9H546.3v8.6H212.8Z" class="g2"/>
+<path d="M212.8 90.9h27.5m9.2 0H277m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0H442m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h3.4m0 0v8.6m0 0H530.9m-9.1 0H494.3m-9.2 0H482m-6.1 0H448.4m-9.1 0H411.8m-9.2 0h-3.1m-6.1 0H365.9m-9.1 0H329.3m-9.2 0H317m-6.1 0H283.4m-9.1 0H246.8m-9.2 0h-3.1m-6.1 0H212.8m0 0V90.9" class="g3"/>
+
+<!-- ===== 側面図：外箱（L字型）===== -->
+<path fill-rule="evenodd" d="M803.7 99.5V344.3H979.6V175.4H911.7V99.5h-108Z" class="g2"/>
+<path d="M803.7 99.5V127m0 9.2v27.5m0 9.2V176m0 6.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v27.5m0 9.1v27.5m0 9.2V341m0 2.9v.4m0 0h27.5m9.2 0h27.5m9.2 0h3.1m6 0h27.5m9.2 0h27.5m9.2 0h3.1m6 0h10.9m0 0V327.6m0-9.1V291m0-9.2v-3.1m0-6.1V245.1m0-9.1V208.5m0-9.2v-3.1m0-6.1V175.4m0 0h-8.7m0 0h-4.2m-9.1 0H930.1m-9.2 0h-3.1m-5.7 0h-.4m0-2.2V145.7m0-9.1V110m0 0v-.9m0-9.2v-.4m0 0H909m-6.1 0H875.4m-9.1 0H838.8m-9.2 0h-3.1m-6.1 0H803.7" class="g3"/>
+<path d="M803.7 90.9h8.8v8.6h-8.8Z" class="g2"/>
+<path d="M803.7 90.9h8.8m0 0v8.6m0 0h-8.8m0 0V98.3" class="g3"/>
+
+<!-- ===== 側面図：内箱（L字型）===== -->
+<path fill-rule="evenodd" d="M803.7 110V333.8H970.9V175.4H911.7V110h-108Z" class="g2"/>
+<path d="M803.7 110v27.5m0 9.2v27.5m0 9.1v3.2m0 6V220m0 9.2v27.5m0 9.1V269m0 6v27.5m0 9.2v22.1m0 0h5.4m9.1 0h3.1m6.1 0h27.5m9.2 0h27.5m9.1 0h3.1m6.1 0h27.5m9.2 0h24.3m0 0v-3.1m0-9.1v-3.1m0-6.1V284.9m0-9.2V248.2m0-9.1V236m0-6.1V202.4m0-9.2V175.4m0 0h-9.7m-9.1 0h-3.2m-6 0H915.4m-3.3 0h-.4m0 0V147.9m0-9.1v-3.1m0-6.1V110m0 0h-7.9m-9.1 0H867.2m-9.2 0h-3.1m-6.1 0H821.3m-9.1 0h-8.5" class="g3"/>
+
+<!-- ===== 側面図：側板 ===== -->
+<path d="M793.5 106.1h10.2V384.6H793.5Z" class="g2"/>
+<path d="M793.5 106.1h10.2m0 0v17.3m0 9.2v27.5m0 9.1v3.1m0 6.1v27.5m0 9.2v27.5m0 9.1v3.1m0 6.1v27.5m0 9.2v27.5m0 9.1v3.1m0 6.1v27.5m0 9.2v4.5m0 0H793.5m0 0V372m0-9.2v-3.1m0-6V326.2m0-9.2V289.5m0-9.2v-3.1m0-6V243.7m0-9.2V207m0-9.2v-3.1m0-6V161.2m0-9.2V124.5m0-9.2v-3.1m0-5.7v-.4m10.2 133.2h27.5m9.2 0h27.5m9.2 0h3.1m6 0h27.5m9.2 0h27.5m9.2 0h3.1m6 0h2.2m0 0V248m0 0H954.4m-9.1 0H917.8m-9.2 0h-3.1m-6.1 0H871.9m-9.1 0H835.3m-9.2 0H823m-6.1 0H803.7m0 0v-8.7m82.9-5.7l3.7-13.8l3.6 13.8" class="g3"/>
+<path d="M886.6 233.6l3.7-13.8l3.6 13.8" class="g5"/>
+<path d="M893.9 262.4l-3.6 13.7l-3.7-13.7" class="g3"/>
+<path d="M893.9 262.4l-3.6 13.7l-3.7-13.7" class="g5"/>
+<path d="M890.3 219.8v27.5m0 9.2v19.6M816.6 110h8.6m0 0v13m0 0h-5.9m-2.7-6.4V110" class="g3"/>
+
+<!-- ===== 耐震ラッチ（側面図） ===== -->
+<path d="M896.5 41.3H924m9.2 0h1.4" class="g6"/>
+<path fill-rule="evenodd" d="M934.6 34.5h61.3V48.2H934.6V34.5Z" class="g2"/>
+<text x="934.6" y="46.2" dx="0 0 0 0 .1" class="s3">耐震ラッチ </text>
+<path fill-rule="evenodd" d="M818.9 119l12.3-7.2l-5.1-5.1L818.9 119Z" class="g7"/>
+<path d="M818.9 119l12.3-7.2l-5.1-5.1L818.9 119" class="g8"/>
+<path d="M823.5 114.2L843 94.8m6.4-6.4l19.4-19.5m6.6-6.6l2.2-2.2m4.2-4.2l14.7-14.6" class="g6"/>
+
+<!-- ===== 側面図：D寸法 ===== -->
+<path d="M793.5 391.2v27.5m0 9.2V434m186.1-82.7v27.5m0 9.1v27.5m0 9.2v3.1m0 5.9v.4M786.5 420.2h7m186.1 0h6.9" class="g0"/>
+<path d="M798.2 415.2l-9.7 9.8m186.3 0l9.7-9.8" class="g1"/>
+<path d="M793.5 420.2H821m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h21.1" class="g0"/>
+<path fill-rule="evenodd" d="M876.1 399.5h20.8v13.7H876.1V399.5Z" class="g2"/>
+<text x="876.2" y="411.4" dx="0 .1 -.1" class="s0">450 </text>
+
+<!-- ===== 側面図：HGが隠れる寸法（右） ===== -->
+<path d="M786.5 384.3H759m-9.2 0h-1.1m37.8-40H759m-9.2 0h-1.1m13.8 46.9v-6.9m0-40v-6.8" class="g0"/>
+<path d="M757.5 379.5l9.7 9.7m0-40l-9.7-9.7" class="g1"/>
+<path d="M762.5 384.3V356.8m0-9.2v-3.3" class="g0"/>
+<path fill-rule="evenodd" d="M741.8 315h13.7v98.6H741.8V315Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 753.7 413.6)" dx="0 0 0 0 0 0 .1 0" class="s0">HGが隠れる寸法 </text>
+
+<!-- ===== 側面図：H内寸（570） ===== -->
+<path d="M786.5 99.5H759m-9.2 0h-1.1m58.1 244.8H779.3m-9.1 0H748.7M762.5 92.8v6.7m0 244.8v7" class="g0"/>
+<path d="M767.2 104.5l-9.7-9.7m0 244.7l9.7 9.7" class="g1"/>
+<path d="M762.5 99.5V127m0 9.2v27.5m0 9.2V176m0 6.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v27.5m0 9.1v27.5m0 9.2V341m0 2.9v.4" class="g0"/>
+<path fill-rule="evenodd" d="M741.8 211.8h13.7v20.5H741.8V211.8Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 753.7 232.3)" dx="0 .1 -.1" class="s0">570 </text>
+
+<!-- ===== 側面図：20mm天板 ===== -->
+<path d="M786.5 99.5H759m-9.2 0h-1.1M797 90.9H769.5m-9.2 0H748.7m13.8 15.6v-7m0-8.6V84.2" class="g0"/>
+<path d="M757.5 94.8l9.7 9.7m0-8.6l-9.7-9.7" class="g1"/>
+<path d="M762.5 99.5V90.9" class="g0"/>
+<path fill-rule="evenodd" d="M741.8 88.4h13.7v13.7H741.8V88.4Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 753.7 102.1)" class="s0">20 </text>
+
+<!-- ===== 側面図：H外寸 ===== -->
+<path d="M766 90.9H738.5m-9.2 0H715m51 293.4H738.5m-9.2 0H715M728.8 84.2v6.7m0 293.4v6.9" class="g0"/>
+<path d="M733.5 95.9l-9.7-9.7m0 293.3l9.7 9.7" class="g1"/>
+<path d="M728.8 90.9v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v9.2" class="g0"/>
+
+<!-- ===== 正面図：本体（扉延長 y=384.3まで）===== -->
+<path fill-rule="evenodd" d="M546.3 384.3V99.5H212.8V384.3H546.3Z" class="g2"/>
+<path d="M546.3 384.3V356.8m0-9.2V320.1m0-9.2v-3.1m0-6V274.3m0-9.2V237.6m0-9.2v-3.1m0-6V191.8m0-9.2V155.1m0-9.2v-3.1m0-6V109.3m0-9.2v-.6m0 0H519.4m-9.2 0h-3.1m-6.1 0H473.5m-9.1 0H436.9m-9.2 0h-3.1m-6.1 0H391m-9.1 0H354.4m-9.2 0h-3.1m-6.1 0H308.5m-9.1 0H271.9m-9.2 0h-3.1m-6.1 0H226m-9.1 0h-4.1m0 0V123m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2V288m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 1.1v.4m0 0h27.5m9.2 0H277m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0H442m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h3.4m-8.6-48.6V308.2m0-9.2V271.5m0-9.1v-3.2m0-6V225.7m0-9.2V189m0-9.1v-3.2m0-6V143.2m0-9.2V108.3m0 0h-1.8m-9.2 0h-3.1m-6 0H490.1m-9.2 0H453.4m-9.2 0h-3.1m-6 0H407.6m-9.2 0H370.9m-9.2 0h-3.1m-6.1 0H325m-9.1 0H288.4m-9.2 0h-3.1m-6.1 0H242.5m-9.1 0H221.7m0 0v15.8m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 9.2v27.5m0 9.2v3.1m0 6v27.5m0 .4v.4m0 0h27.5m9.1 0h3.1m6.1 0H295m9.2 0h27.5m9.1 0h3.1m6.1 0h27.5m9.2 0h27.5m9.1 0h3.1m6.1 0H460m9.2 0h27.5m9.1 0h3.1m6.1 0h22.7m-158 48.6V356.8m0-9.2V320.1m0-9.2v-3.1m0-6V274.3m0-9.2V237.6m0-9.2v-3.1m0-6V191.8m0-9.2V155.1m0-9.2v-3.1m0-6V109.3m0-9.2v-.6m158 126.7v-8.6m0 0H518.8m-9.1 0H482.2m-9.2 0h-3.1m-6.1 0H436.3m-9.1 0H399.7m-9.2 0h-3.1m-6.1 0H353.8m-9.1 0H317.2m-9.2 0h-3.1m-6.1 0H271.3m-9.1 0H234.7m-9.2 0h-3.1m-.4 0h-.3m0 6.1v2.5m0 0h24.9m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.2 0h27.5m9.1 0H378m6.1 0h27.5m9.2 0h27.5m9.1 0h3.1m6.1 0h27.5m9.2 0h27.5m6.6 0h.3M295.9 211.9l3.7-13.7l3.6 13.7" class="g3"/>
+<path d="M295.9 211.9l3.7-13.7l3.6 13.7" class="g5"/>
+<path d="M303.2 240.7l-3.6 13.8l-3.7-13.8" class="g3"/>
+<path d="M303.2 240.7l-3.6 13.8l-3.7-13.8" class="g5"/>
+<path d="M299.6 198.2v27.5m0 9.2v19.6m92-146h8.6m0 0v13m0 0h-5.9m-2.7-6.4v-6.6" class="g3"/>
+
+<!-- ===== 耐震ラッチ（正面図上） ===== -->
+<path d="M471.5 40H499m9.2 0h1.5" class="g6"/>
+<path fill-rule="evenodd" d="M509.7 33h61.2V46.7H509.7V33Z" class="g2"/>
+<text x="509.7" y="44.9" dx="0 0 0 0 .1" class="s3">耐震ラッチ </text>
+<path fill-rule="evenodd" d="M394 117.5l12.3-7.1l-5.3-5.2l-7 12.3Z" class="g7"/>
+<path d="M394 117.5l12.3-7.1l-5.3-5.2l-7 12.3" class="g8"/>
+<path d="M398.6 112.7L418 93.3m6.6-6.4L444 67.5m6.4-6.4l2.3-2.2m4.4-4.4L471.5 40" class="g6"/>
+
+<!-- ===== 底面図：本体 ===== -->
+<path d="M359.2 108.5h8.6m0 0v13m0 0h-5.9m-2.7-6.4v-6.6m178.5 658V739m0-9.1V702.4m0-9.2v-3.1m0-6.1V656.5m0-9.1V619.9m0-9.2v-3.1m0-6.1V574m0-9.1V539.2m0 0h-1.8m-9.2 0h-3.1m-6 0H490.1m-9.2 0H453.4m-9.2 0h-3.1m-6 0H407.6m-9.2 0H370.9m-9.2 0h-3.1m-6.1 0H325m-9.1 0H288.4m-9.2 0h-3.1m-6.1 0H242.5m-9.1 0H221.7m0 0V555m0 9.1v3.1m0 6.1v27.5m0 9.2v27.5m0 9.1v3.1m0 6.1v27.5m0 9.2V720m0 9.1v3.1m0 6.1v27.5m0 .4v.3m0 0h27.5m9.1 0h3.1m6.1 0H295m9.2 0h27.5m9.1 0h3.1m6.1 0h27.5m9.2 0h27.5m9.1 0h3.1m6.1 0H460m9.2 0h27.5m9.1 0h3.1m6.1 0h22.7m-324.9 8.8h27.5m9.2 0H277m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0H442m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h3.4m-8.6-118.1v-8.6m0 0H518.8m-9.1 0H482.2m-9.2 0h-3.1m-6.1 0H436.3m-9.1 0H399.7m-9.2 0h-3.1m-6.1 0H353.8m-9.1 0H317.2m-9.2 0h-3.1m-6.1 0H271.3m-9.1 0H234.7m-9.2 0h-3.1m-.4 0h-.3m0 6.1v2.5m0 0h24.9m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.2 0h27.5m9.1 0H378m6.1 0h27.5m9.2 0h27.5m9.1 0h3.1m6.1 0h27.5m9.2 0h27.5m6.6 0h.3M295.9 642.8l3.7-13.8l3.6 13.8" class="g3"/>
+<path d="M295.9 642.8l3.7-13.8l3.6 13.8" class="g5"/>
+<path d="M303.2 671.6l-3.6 13.7l-3.7-13.7" class="g3"/>
+<path d="M303.2 671.6l-3.6 13.7l-3.7-13.7" class="g5"/>
+<path d="M299.6 629v27.5m0 9.2v19.6" class="g3"/>
+<path d="M391.6 539.2h8.6v13h-8.6Z" class="g2"/>
+<path d="M391.6 539.2h8.6m0 0v13m0 0h-5.9m-2.7-6.4v-6.6" class="g3"/>
+
+<!-- ===== 耐震ラッチ（正面図下） ===== -->
+<path d="M438.7 503.3h27.5m9.2 0h1.4" class="g6"/>
+<path fill-rule="evenodd" d="M476.8 496.5h61.3v13.7H476.8V496.5Z" class="g2"/>
+<text x="476.9" y="508.2" dx="0 0 0 0 .1" class="s3">耐震ラッチ </text>
+<path d="M359.2 539.2h8.6v13h-8.6Z" class="g2"/>
+<path d="M359.2 539.2h8.6m0 0v13m0 0h-5.9m-2.7-6.4v-6.6" class="g3"/>
+
+<!-- ===== 正面図：W内寸（720） ===== -->
+<path d="M212.8 782.1v27.5m0 9.2v27.5m0 2.9v.4m333.5-67.5v27.5m0 9.2v27.5m0 2.9v.4M206.1 835.8h6.7m333.5 0h7" class="g0"/>
+<path d="M217.8 831.1l-9.7 9.7m333.5 0l9.7-9.7" class="g1"/>
+<path d="M212.8 835.8h27.5m9.2 0H277m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0H442m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h3.4" class="g0"/>
+<path fill-rule="evenodd" d="M369.4 815.3H390V829H369.4V815.3Z" class="g2"/>
+<text x="369.4" y="827" dx="0 .1 -.1" class="s0">720 </text>
+
+<!-- ===== 底面図：W総幅寸法線（760） ===== -->
+<g id="dimline-total-width-bottom">
+<path d="M205.1 805.6v71.6M554.2 805.6v71.6M198.2 863.5h6.9M554.2 863.5H561" class="g0"/>
+<path d="M209.9 858.7l-9.7 9.7M549.3 868.4l9.7-9.7" class="g1"/>
+<path d="M205.1 863.5H554.2" class="g0"/>
+<path fill-rule="evenodd" d="M369.4 843H390v13.7H369.4V843Z" class="g2"/>
+<text x="369.4" y="854.7" dx="0 .1 -.1" class="s0">760 </text>
+</g>
+
+<!-- ===== 正面図：X字バツ（扉模様） ===== -->
+<path d="M379.7 384.3l-20.9-17.8m-7-6.1l-20.9-17.7m-6.9-6.1l-2.4-2m-4.6-3.9l-21.1-17.8m-7-6L268 289.1m-6.9-6l-2.4-2.1m-4.6-3.8l-20.9-17.8m-7-6L212.8 242m0 0l21-17.8m6.9-6l20.9-17.8m7-6.1l2.4-2m4.6-3.8l20.9-18m6.9-5.9l20.9-17.8m7-6l2.4-2m4.6-3.9l21-17.9m7-5.9l13.4-11.6m0 284.8l20.9-17.8m7-6.1l20.9-17.7m6.9-6.1l2.4-2m4.6-3.9l20.9-17.9m6.9-5.9l21-17.8m6.9-6l2.4-2.1m4.6-3.8l21.1-18m6.9-5.8L546.3 242m0 0l-20.9-17.8m-6.9-6l-20.9-17.8m-7-6.1l-2.4-2m-4.6-3.8l-20.9-18m-6.9-5.9l-20.9-17.9m-7-5.9l-2.4-2m-4.6-4L400 117m-6.9-6.1L379.7 99.5" class="g3"/>
+
+<!-- ===== 正面図：W内寸（720） ===== -->
+<path d="M212.8 396.4v27.5m0 9.1v24.4m333.5-54.2v27.5m0 9.1v17.6M206.1 443.7h6.7m333.5 0h7" class="g0"/>
+<path d="M217.8 438.7l-9.7 9.7m333.5 0l9.7-9.7" class="g1"/>
+<path d="M212.8 443.7h27.5m9.2 0H277m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0H442m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h3.4" class="g0"/>
+<path fill-rule="evenodd" d="M369.4 422.9H390v13.8H369.4V422.9Z" class="g2"/>
+<text x="369.4" y="434.9" dx="0 .1 -.1" class="s0">720 </text>
+
+<!-- ===== 底面図：天板 ===== -->
+<path d="M213.8 521.9H545.6v8.7H213.8Z" class="g2"/>
+<path d="M213.8 521.9h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h1.8m0 0v8.7m0 0H528.5m-9.1 0H491.9m-9.2 0h-3.1m-6.1 0H446m-9.1 0H409.4m-9.2 0h-3.1m-6.1 0H363.5m-9.1 0H326.9m-9.2 0h-3.1m-6.1 0H281m-9.1 0H244.4m-9.2 0h-3.1m-6.1 0H213.8m0 0v-8.7" class="g3"/>
+
+<!-- ===== 耐震ラッチ引出線（底面図） ===== -->
+<path fill-rule="evenodd" d="M394 548.2l12.3-7.2l-5.3-5.1l-7 12.3Z" class="g7"/>
+<path d="M394 548.2l12.3-7.2l-5.3-5.1l-7 12.3" class="g8"/>
+<path d="M398.6 543.4L418 524m6.4-6.4l14.3-14.3" class="g6"/>
+<path d="M213.8 521.9v27.5m0 9.2v27.5m0 9.2v3.1m0 6.1V632m0 9.1v27.5m0 9.2v3.1m0 6.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v5.8" class="g3"/>
+<path d="M545.6 530.6v27.5m0 9.1v27.5m0 9.2V607m0 6.1v27.5m0 9.1v27.5m0 9.2v3.1m0 6.1v27.5m0 9.1v27.5m0 9.2V772m0 3v.3" class="g3"/>
+
+<!-- ===== 正面図：W総幅寸法線（760） ===== -->
+<g id="dimline-total-width-front">
+<path d="M205.1 404.4v27.5m0 9.2v27.5m0 9.2v3.1m0 6v.8M554.2 423.5V451m0 9.2v27.5M198.2 473.9h6.9M554.2 473.9H561" class="g0"/>
+<path d="M209.9 469.2l-9.7 9.7M549.3 478.9l9.7-9.7" class="g1"/>
+<path d="M205.1 473.9H554.2" class="g0"/>
+<path fill-rule="evenodd" d="M369.4 453.4H390v13.7H369.4V453.4Z" class="g2"/>
+<text x="369.4" y="465.1" dx="0 .1 -.1" class="s0">760 </text>
+</g>
+
+<!-- ===== グレー縦棒（正面図） ===== -->
+<g id="filler-left-gray-bottom">
+<path d="M212.8 344.5H220v29h-7.2Z" class="g4"/>
+<path d="M212.8 344.5H220m0 0v20.3m-.5 8.7h-6.7m0 0V352.6" class="g3"/>
+</g>
+<g id="filler-right-gray-bottom">
+<path d="M539.2 344.5h7.1v29h-7.1Z" class="g4"/>
+<path d="M539.2 344.5h7.1m0 0v20.3m-.5 8.7h-6.6m0 0V352.6" class="g3"/>
+</g>
+
+<!-- ===== ハンガーパイプ（正面図） ===== -->
+<g id="hanger-pipe-front">
+<path d="M220 365.8H539.2v7.1H220Z" class="g4"/>
+<path d="M220 365.8h27.5m9.2 0h27.5m9.1 0h3.2m6 0H330m9.2 0h27.5m9.1 0H379m6 0h27.5m9.2 0h27.5m9.1 0h3.2m6 0H495m9.2 0h27.5m7.1 0h.4m0 7.1h-3.1m-6.1 0H502.5m-9.2 0H465.8m-9.1 0h-3.1m-6.1 0H420m-9.2 0H383.4m-9.2 0h-3.1m-6.1 0H337.5m-9.1 0H300.8m-9.1 0h-3.1m-6.1 0H255m-9.2 0H220m0 0v-1.6" class="g3"/>
+</g>
+
+<!-- ===== 正面図：下端ボーダー ===== -->
+<path d="M212.8 344.3h27.5m9.2 0H277m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0H442m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h3.4" class="g3"/>
+
+<!-- ===== 正面図左：H寸法線（580=H-20） ===== -->
+<path d="M206.1 90.9H178.6m-9.2 0H149.6m56.5 8.6H178.6m-9.2 0H149.6m13.7-15.3v6.7m0 8.6v7" class="g0"/>
+<path d="M168.1 95.9l-9.7-9.7m0 8.6l9.7 9.7" class="g1"/>
+<path d="M163.3 90.9v8.6" class="g0"/>
+<path fill-rule="evenodd" d="M142.6 88.4h13.8v13.7H142.6V88.4Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 154.5 102.1)" class="s0">20 </text>
+<path d="M199.1 384.3H171.6m-9.2 0H134.9m-9.1 0h-3.2m-6 0H102.9M163.2 90.9H135.7m-9.2 0H102.9m13.7 300.3v-6.9m0-293.4V84.2" class="g0"/>
+<path d="M111.7 379.5l9.7 9.7m0-293.3l-9.7-9.7" class="g1"/>
+<path d="M116.6 384.3V356.8m0-9.2V320.1m0-9.2v-3.1m0-6V274.3m0-9.2V237.6m0-9.2v-3.1m0-6V191.8m0-9.2V155.1m0-9.2v-3.1m0-6V109.3m0-9.2V90.9m89.5 253.4H178.6m-9.2 0H149.6M206.1 99.5H178.6m-9.2 0H149.6m13.7 238v6.8m0-244.8v7" class="g0"/>
+<path d="M158.4 339.5l9.7 9.7m0-244.7l-9.7-9.7" class="g1"/>
+<path d="M163.3 344.3V316.8m0-9.2V280.1m0-9.1v-3.1m0-6.1V234.3m0-9.2V197.6m0-9.1v-3.1m0-6.1V151.8m0-9.2V115.1m0-9.1v-3.1m0-3v-.4" class="g0"/>
+<path fill-rule="evenodd" d="M142.6 211.8h13.8v20.5H142.6V211.8Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 154.5 232.3)" dx="0 .1 -.1" class="s0">580 </text>
+
+<!-- ===== 正面図左：HGが隠れる寸法 ===== -->
+<path d="M206.1 344.3H178.6m-9.2 0H149.6m60.5 40H182.6m-9.2 0H149.6m13.7-46.8v6.8m0 40v6.9" class="g0"/>
+<path d="M168.1 349.2l-9.7-9.7m0 40l9.7 9.7" class="g1"/>
+<path d="M163.3 344.3v27.5m0 9.2v3.3" class="g0"/>
+<path fill-rule="evenodd" d="M142.6 315h13.8v98.6H142.6V315Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 154.5 413.6)" dx="0 0 0 0 0 0 .1 0" class="s0">HGが隠れる寸法 </text>
+
+<!-- ===== 底面図左：H寸法線 ===== -->
+<path d="M207 521.9H179.5m-9.2 0H150.5m56.5 8.7H179.5m-9.2 0H150.5M164.3 515v6.9m0 8.7v6.8" class="g0"/>
+<path d="M169 526.7l-9.7-9.7m0 8.6l9.7 9.7" class="g1"/>
+<path d="M164.3 521.9v8.7" class="g0"/>
+<path fill-rule="evenodd" d="M143.5 519.4h13.8v13.7H143.5V519.4Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 155.5 533.1)" class="s0">20 </text>
+<path d="M181.1 775.3H153.6m-9.1 0H117m-9.2 0h-3.1m-1.5 0h-.3m71.5-253.4H146.9m-9.2 0H110.2m-7 0h-.3m13.7 260.2v-6.8m0-253.4V515" class="g0"/>
+<path d="M111.7 770.4l9.7 9.7m0-253.4l-9.7-9.7" class="g1"/>
+<path d="M116.6 775.3V747.8m0-9.1V711.2m0-9.2v-3.1m0-6.1V665.3m0-9.1V628.7m0-9.2v-3.1m0-6.1V582.8m0-9.1V546.2m0-9.2v-3.1m0-6.1v-5.9" class="g0"/>
+<path fill-rule="evenodd" d="M95.9 638.2h13.7v20.7H95.9V638.2Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 107.8 658.9)" dx="0 .1 -.1" class="s0">600 </text>
+<path d="M206.1 775.3H178.6m-9.2 0H150.5M207 530.6H179.5m-9.2 0H150.5m13.8 237.8v6.9m0-244.7v6.8" class="g0"/>
+<path d="M159.3 770.4l9.7 9.7m0-244.8l-9.7-9.7" class="g1"/>
+<path d="M164.3 775.3V747.8m0-9.1V711.2m0-9.2v-3.1m0-6.1V665.3m0-9.1V628.7m0-9.2v-3.1m0-6.1V582.8m0-9.1V546.2m0-9.2v-3.1m0-3v-.3" class="g0"/>
+<path fill-rule="evenodd" d="M143.5 642.6h13.8v20.7H143.5V642.6Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 155.5 663.3)" dx="0 .1 -.1" class="s0">580 </text>
+
+<!-- ===== 底面図：最上部ボーダー ===== -->
+<path d="M206.1 521.9h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0H365m6.1 0h27.5m9.1 0h27.5m9.2 0h3.1m6.1 0h27.5m9.1 0h27.5m9.2 0H530m6.1 0h17.2" class="g3"/>
+
+<!-- ===== 側面図：10mm赤寸法 ===== -->
+<path d="M786.5 106.1H759m27.5-6.6H759m8.6 13.4v-6.8m0-6.6V92.8" class="g9"/>
+<path d="M762.7 101.2l9.7 9.7m0-6.4l-9.7-9.7" class="ga"/>
+<path d="M767.6 106.1V99.5" class="g9"/>
+<path fill-rule="evenodd" d="M754.1 98.3h9.1v9.1h-9.1V98.3Z" class="g2"/>
+<text transform="matrix(0 -1 1 0 761.9 107.4)" class="s4">10 </text>
+
+<!-- ===== 切り欠き寸法線 ===== -->
+<!-- kirikake_W 水平寸法 -->
+<path d="M911.7 175.4h67.9m-67.9-94.7V54.6m67.9 26.1V54.6M904.8 68.4h6.9m67.9 0h6.9" class="g3"/>
+<path d="M916.5 63.6l-9.7 9.7m67.9 0l9.7-9.7" class="gb"/>
+<path d="M911.7 68.4h67.9" class="g3"/>
+<path fill-rule="evenodd" d="M931.9 43.3h27.5V61.6H931.9V43.3Z" class="g2"/>
+<text x="931.9" y="59" class="s5">230 </text>
+<!-- kirikake_H 垂直寸法 -->
+<path d="M1002.5 175.4h27.6m-27.6-75.9h27.6m-13.7 82.7v-6.8m0-75.9V92.8" class="g3"/>
+<path d="M1011.6 170.6l9.8 9.7m0-75.8l-9.8-9.7" class="gb"/>
+<path d="M1016.4 175.4V99.5" class="g3"/>
+<path fill-rule="evenodd" d="M1041.7 123.7v27.5h-18.3V123.7h18.3Z" class="g2"/>
+<text transform="matrix(0 1 -1 0 1026 123.7)" class="s5">150 </text>
+<!-- 引出線 + 「切り欠き加工」ラベル -->
+<path d="M920.3 155.7l120.5-97.6" class="g3"/>
+<path fill-rule="evenodd" d="M1040.8 51.1h110V69.5h-110V51.1Z" class="g2"/>
+<text x="1040.8" y="66.9" class="s5">切り欠き加工 </text>
+
+</g>
+
+<style>
+
+@font-face {
+	font-family: CIDFont-F1_8;
+	src: url("fonts/CIDFont-F1_8.woff") format("woff");
+}
+
+@font-face {
+	font-family: CIDFont-F2_g;
+	src: url("fonts/CIDFont-F2_g.woff") format("woff");
+}
+
+</style>
+
+</svg>
