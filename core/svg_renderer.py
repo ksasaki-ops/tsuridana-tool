@@ -49,9 +49,15 @@ def _register_reportlab_fonts():
     _FONT_REGISTERED = True
     windir = os.environ.get("WINDIR", "C:/Windows")
     candidates = [
+        # Windows
         os.path.join(windir, "Fonts", "arial.ttf"),
         os.path.join(windir, "Fonts", "msgothic.ttc"),
         os.path.join(windir, "Fonts", "cour.ttf"),
+        # macOS
+        "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+        "/System/Library/Fonts/Hiragino Sans GB.ttc",
+        # Linux
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
     ]
     for path in candidates:
         if os.path.exists(path):
@@ -62,11 +68,20 @@ def _register_reportlab_fonts():
             except Exception:
                 continue
 
-# フォント候補（日本語対応）
+# フォント候補（日本語対応 / Win・Mac・Linux。存在するものが使われる）
 _FONT_CANDIDATES = [
+    # Windows
     os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts", "msgothic.ttc"),
     os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts", "meiryo.ttc"),
     os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts", "YuGothM.ttc"),
+    # macOS（日本語対応）
+    "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",
+    "/System/Library/Fonts/Hiragino Sans GB.ttc",
+    "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+    # Linux（Noto / IPA）
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
+    # 同梱フォント（あれば）
     asset("ipaexg.ttf"),
 ]
 

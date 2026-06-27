@@ -3,6 +3,7 @@ tkinter メインウィンドウ
 """
 import os
 import subprocess
+import sys
 import tkinter as tk
 from datetime import date
 from tkinter import messagebox, ttk
@@ -23,11 +24,17 @@ MATERIAL_OPTIONS = [
 
 
 def _open_file(path: str):
-    """生成ファイルをOSのデフォルトアプリで開く"""
+    """生成ファイルをOSのデフォルトアプリで開く（Win / Mac / Linux 対応）"""
     try:
-        os.startfile(path)
+        if sys.platform == "darwin":          # macOS
+            subprocess.Popen(["open", path])
+        elif os.name == "nt":                  # Windows
+            os.startfile(path)
+        else:                                   # Linux 等
+            subprocess.Popen(["xdg-open", path])
     except Exception:
-        subprocess.Popen(["explorer", "/select,", path])
+        # 自動オープンに失敗してもファイル自体は保存済みなので無視
+        pass
 
 
 class MainWindow:

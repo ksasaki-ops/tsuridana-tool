@@ -22,3 +22,7 @@ tools/
 # IDE
 .vscode/
 .idea/
+
+# macOS / venv
+.DS_Store
+.venv/

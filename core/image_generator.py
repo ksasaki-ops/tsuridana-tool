@@ -13,11 +13,20 @@ from PIL import Image, ImageDraw, ImageFont
 from core.text_builder import OrderSpec, build_spec_lines, select_base_image
 from utils.path_utils import asset, coordinates_path, downloads_dir
 
-# フォント候補（優先順）
+# フォント候補（優先順 / Win・Mac・Linux 対応。存在するものが使われる）
 _FONT_CANDIDATES = [
+    # Windows
     os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts", "msgothic.ttc"),
     os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts", "meiryo.ttc"),
     os.path.join(os.environ.get("WINDIR", "C:/Windows"), "Fonts", "YuGothM.ttc"),
+    # macOS（日本語対応）
+    "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc",
+    "/System/Library/Fonts/Hiragino Sans GB.ttc",
+    "/System/Library/Fonts/Supplemental/Arial Unicode.ttf",
+    # Linux（Noto / IPA）
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
+    # 同梱フォント（あれば）
     asset("ipaexg.ttf"),
 ]
 
