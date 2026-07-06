@@ -1,5 +1,8 @@
 """N=1 出力がベースライン(改修前)とピクセル一致するか検証。
-抽出は N=1 でも実行されるため、これは抽出の非破壊性を検証する(C1対策)。"""
+_multiply_shelves は N=1 で早期returnし棚板抽出を行わない(人間承認済みの仕様変更)。
+そのため本テストは抽出の非破壊性検証ではなく、text_builder 変更等を含む
+N=1 の generate_png パイプライン出力が改修前ベースラインと完全一致することを
+保証する後方互換性(完全一致)回帰ガードである。"""
 import os, sys, tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)

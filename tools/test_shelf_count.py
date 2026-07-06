@@ -74,7 +74,7 @@ print(f"  OK: N=2 front → {[round(v,1) for v in t2]}")
 # === テスト4: 抽出とツリー構造(Family A) ===
 print("=== テスト4: 抽出ツリー検証 ===")
 from core.svg_renderer import (_extract_shelf_group, _multiply_shelves,
-                               _shelf_family, _SHELF_VIEWS)
+                               _shelf_family, _SHELF_VIEWS, _SHELF_BAND_MARKER)
 from utils.path_utils import asset
 
 _NS = "http://www.w3.org/2000/svg"
@@ -114,5 +114,83 @@ for n in (2, 3, 4):
     assert len(translated) == n * len(_SHELF_VIEWS), \
         f"FAIL: N={n} translate群={len(translated)} 期待={n*len(_SHELF_VIEWS)}"
     print(f"  OK: N={n} translate群={len(translated)}")
+
+# === テスト5: 抽出とツリー構造(Family B) ===
+print("=== テスト5: 抽出ツリー検証(Family B) ===")
+
+_B_TEMPLATES = ("template_tobira.svg", "template_tobira_kirikake.svg")
+
+# 5-1: 各テンプレート×各ビューで棚板グループが生成され、子要素を最低3つ(帯+矢印)持つ
+for tpl in _B_TEMPLATES:
+    root_b = _load_root(tpl)
+    for view in _SHELF_VIEWS:
+        g = _extract_shelf_group(root_b, "B", view)
+        assert g is not None, f"FAIL: {tpl} shelf-{view}(B) 抽出できない"
+        n_children = len(list(g))
+        assert n_children >= 3, f"FAIL: {tpl} shelf-{view}(B) 子要素不足({n_children})"
+        print(f"  OK: {tpl} shelf-{view}(B) 抽出 子要素={n_children}")
+
+
+def _band_marker_str(family, view):
+    cfg = _SHELF_BAND_MARKER[(family, view)]
+    return cfg if isinstance(cfg, str) else cfg["marker"]
+
+
+# 5-2: クロスビュー混入防止(B)。_multiply_shelves と同順(front→side→section)で
+#     単一 root から3ビューを抽出し、各グループが他ビューの帯 marker を含まないことを
+#     テスト4-2(C2 回帰防止)と同じ「含有チェック」方式で確認する。
+for tpl in _B_TEMPLATES:
+    root_bx = _load_root(tpl)
+    groups = {}
+    for view in _SHELF_VIEWS:  # front, side, section の順(_multiply_shelves と同順)
+        groups[view] = _extract_shelf_group(root_bx, "B", view)
+    for view, g in groups.items():
+        assert g is not None, f"FAIL: {tpl} shelf-{view}(B) 混入テスト用抽出に失敗"
+        other_markers = [_band_marker_str("B", v) for v in _SHELF_VIEWS if v != view]
+        for p in g.iter(f"{_NT}path"):
+            d = p.get("d", "")
+            for om in other_markers:
+                assert om not in d, f"FAIL: {tpl} shelf-{view}(B) に他ビュー帯 marker 混入: {om}"
+    print(f"  OK: {tpl} クロスビュー混入なし(B)")
+
+# === テスト6: marker 一意性チェック(SVG再エクスポート破壊検知) ===
+print("=== テスト6: marker 一意性チェック ===")
+from core.svg_renderer import _SHELF_TAIL_SPLIT
+
+_FAMILY_TEMPLATES = {
+    "A": ["template_standard.svg", "template_kirikake.svg"],
+    "B": ["template_tobira.svg", "template_tobira_kirikake.svg"],
+}
+
+_template_text_cache = {}
+
+
+def _template_text(tpl):
+    if tpl not in _template_text_cache:
+        with open(asset(tpl), "r", encoding="utf-8") as f:
+            _template_text_cache[tpl] = f.read()
+    return _template_text_cache[tpl]
+
+
+_marker_check_count = 0
+for key, cfg in _SHELF_BAND_MARKER.items():
+    family = key[0]
+    marker = cfg if isinstance(cfg, str) else cfg["marker"]
+    for tpl in _FAMILY_TEMPLATES[family]:
+        text = _template_text(tpl)
+        cnt = text.count(marker)
+        assert cnt == 1, f"FAIL: band marker {marker!r}({key}) が {tpl} 内で {cnt} 回出現(期待=1)"
+        _marker_check_count += 1
+
+for key, cfg in _SHELF_TAIL_SPLIT.items():
+    family = key[0]
+    marker = cfg["marker"]
+    for tpl in _FAMILY_TEMPLATES[family]:
+        text = _template_text(tpl)
+        cnt = text.count(marker)
+        assert cnt == 1, f"FAIL: tail-split marker {marker!r}({key}) が {tpl} 内で {cnt} 回出現(期待=1)"
+        _marker_check_count += 1
+
+print(f"  OK: band/tail-split marker 全 {_marker_check_count} 件(テンプレート×marker組)が各ファイルで一意")
 
 print("\n=== Task1 テストPASS ===")
