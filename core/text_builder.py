@@ -24,6 +24,7 @@ class OrderSpec:
     hassou_no: str = ""     # 発注No.
     hassou_date: str = ""   # 発注日
     bikou: str = ""         # 備考
+    tana_count: int = 1     # 棚板枚数（1〜4）
 
 
 # フィラー → テキスト変換
@@ -48,7 +49,7 @@ def build_spec_lines(spec: OrderSpec) -> list[str]:
         lines.append(f"扉・本体・内部・棚板：{spec.body_material}")
 
     lines += [
-        "棚板1枚ダボ可動式",
+        f"棚板{spec.tana_count}枚ダボ可動式",
         "耐震ラッチ付き",
         "差し込みダボ",
     ]
