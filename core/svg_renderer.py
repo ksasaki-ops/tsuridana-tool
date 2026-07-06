@@ -396,6 +396,275 @@ def _strip_font_face(root):
 
 # ─── メイン生成関数 ────────────────────────────────────────────────
 
+# ─── 棚板複製ロジック ───────────────────────────────────────────────
+# 注: re は本ファイル冒頭(line 7)で import 済み。別名は作らない。
+
+# 英字は全て1トークンとして捕捉する。M m L l H h V v Z z 以外(C/S/Q/T/A 等)が
+# 出現したら下の else 分岐で ValueError を送出する(黙って取りこぼさない)。
+_PATH_TOKEN = re.compile(r"([A-Za-z])|(-?\d*\.?\d+)")
+
+
+def _path_end_point(d: str):
+    """パスデータ d を辿った終端の絶対座標 (x, y) を返す。対応: M m L l H h V v Z z。
+    それ以外のコマンド(曲線・円弧等)は ValueError。"""
+    tokens = []
+    for m in _PATH_TOKEN.finditer(d):
+        if m.group(1):
+            tokens.append(m.group(1))
+        else:
+            tokens.append(float(m.group(2)))
+
+    x = y = 0.0
+    start_x = start_y = 0.0
+    i = 0
+    cmd = None
+    while i < len(tokens):
+        t = tokens[i]
+        if isinstance(t, str):
+            cmd = t
+            i += 1
+            if cmd in ("Z", "z"):
+                x, y = start_x, start_y
+            continue
+        if cmd is None:
+            raise ValueError(f"数値がコマンド無しで出現: {d[:40]}")
+        if cmd in ("M", "L"):
+            x, y = tokens[i], tokens[i + 1]; i += 2
+            if cmd == "M":
+                start_x, start_y = x, y
+                cmd = "L"  # 以降の座標対は暗黙 LineTo
+        elif cmd in ("m", "l"):
+            x += tokens[i]; y += tokens[i + 1]; i += 2
+            if cmd == "m":
+                start_x, start_y = x, y
+                cmd = "l"
+        elif cmd == "H":
+            x = tokens[i]; i += 1
+        elif cmd == "h":
+            x += tokens[i]; i += 1
+        elif cmd == "V":
+            y = tokens[i]; i += 1
+        elif cmd == "v":
+            y += tokens[i]; i += 1
+        else:
+            raise ValueError(f"未対応コマンド: {cmd}")
+    return x, y
+
+
+_SHELF_VIEWS = ("front", "side", "section")
+
+_SHELF_CENTER = {
+    ("A", "front"): 218.25, ("A", "side"): 213.95, ("A", "section"): 656.9,
+    ("B", "front"): 226.35, ("B", "side"): 247.95, ("B", "section"): 657.15,
+}
+_SHELF_CAVITY = {
+    ("A", "front"): (105.0, 340.0), ("A", "side"): (110.0, 333.8),
+    ("A", "section"): (539.2, 766.5),
+    ("B", "front"): (105.0, 344.0), ("B", "side"): (110.0, 333.8),
+    ("B", "section"): (539.2, 766.0),
+}
+
+
+def _shelf_family(spec: OrderSpec) -> str:
+    return "B" if spec.tobira_enchou else "A"
+
+
+def _shelf_targets(family: str, view: str, n: int) -> list:
+    """内寸を(n+1)等分した絶対 y 目標位置リスト"""
+    top, bottom = _SHELF_CAVITY[(family, view)]
+    return [top + i / (n + 1) * (bottom - top) for i in range(1, n + 1)]
+
+
+# 棚板帯 marker（ホストパス d 内で棚板帯部が始まる位置の一意な部分文字列）。
+#   値は str（絶対M始まり=そのまま帯 d に採用）または
+#   dict {"marker": 区切り, "abs": bool}。abs=False の場合は marker が相対始まり
+#   なので、直前までを辿った絶対座標を _path_end_point で求めて M を前置する。
+# Family A: 帯は箱枠パス内に絶対M subpath として融合（絶対M）。
+# Family B: 帯は箱枠/格子パス内に相対 subpath として融合（abs=False で絶対M付与）。
+_SHELF_BAND_MARKER = {
+    ("A", "front"):   "M537.7 227",
+    ("A", "side"):    "M803.7 209.6",
+    ("A", "section"): "M544.7 661.3",
+    ("B", "front"):   {"marker": "m158 126.7", "abs": False},
+    ("B", "side"):    {"marker": "V248m0 0H954.4", "abs": False},
+    ("B", "section"): {"marker": "m-8.6-118.1", "abs": False},
+}
+# 矢印ヘッド/シャフト独立パスの先頭一致プレフィックス（上矢/下矢/シャフト）
+_SHELF_ARROW_PREFIX = {
+    ("A", "front"):   ["M302.7 203.9", "M310 232.7", "M306.3 190.1"],
+    ("A", "side"):    ["M886.6 197.8", "M893.9 226.6", "M890.3 184.1"],
+    ("A", "section"): ["M302.7 646.8", "M310 675.6", "M306.3 633"],
+    ("B", "front"):   ["M295.9 211.9", "M303.2 240.7", "M299.6 198.2"],
+    ("B", "side"):    ["M886.6 233.6", "M893.9 262.4", "M890.3 219.8"],
+    ("B", "section"): ["M295.9 642.8", "M303.2 671.6", "M299.6 629"],
+}
+# パス内で棚板と無関係な後続部を切り離すための「絶対Mまたは相対」区切り。
+#   {"marker": 区切り文字列, "abs": True=区切りが絶対Mなのでそのまま body に残す /
+#                                   False=相対始まりなので _path_end_point で絶対M付与}
+_SHELF_TAIL_SPLIT = {
+    # section shaft は line204 で side 帯と融合。side 帯(絶対M)を body に残す
+    ("A", "section", "M306.3 633"): {"marker": "M803.7 209.6", "abs": True},
+    # front shaft は line99 で dowel マーカーと融合。dowel は相対 m 始まり
+    ("A", "front", "M306.3 190.1"): {"marker": "m92.1-137.9", "abs": False},
+    # B front シャフトは dowel と融合（相対 m 始まり）
+    ("B", "front", "M299.6 198.2"): {"marker": "m92-146", "abs": False},
+    # B side シャフトは dowel と融合（dowel は絶対 M 始まり）
+    ("B", "side", "M890.3 219.8"): {"marker": "M816.6 110", "abs": True},
+    # B section シャフト(M299.6 629)は融合なし（分割不要）
+}
+_NT_PATH = f"{_NT}path"
+
+
+def _shelf_body_class(family: str) -> str:
+    return "g5" if family == "A" else "g3"
+
+
+def _split_tail(elem, split_cfg):
+    """elem の d を split_cfg["marker"] で分割。前半を elem に残し(→呼び出し側で group へ移動)、
+    後半(tail)は body に残すための新規 <path> を生成して返す。tail が相対始まりなら絶対M付与。
+    融合していなければ(marker 不在) None を返す。"""
+    d = elem.get("d", "")
+    marker = split_cfg["marker"]
+    if marker not in d:
+        return None  # 融合していない個体（kirikake 等で形状差がある場合の安全策）
+    si = d.index(marker)
+    head_d, tail_d = d[:si], d[si:]
+    elem.set("d", head_d)
+    if not split_cfg["abs"]:
+        ex, ey = _path_end_point(head_d)
+        tail_d = f"M{ex:.4f} {ey:.4f}" + tail_d  # 相対始まりに絶対起点を付与
+    tail = ET.Element(_NT_PATH)
+    tail.set("d", tail_d)
+    if elem.get("class"):
+        tail.set("class", elem.get("class"))
+    return tail
+
+
+def _extract_shelf_group(root, family: str, view: str):
+    gid = f"shelf-{view}"
+    for g in root.iter(f"{_NT}g"):
+        if g.get("id") == gid:
+            return g
+
+    body_cls = _shelf_body_class(family)
+    parent_map = {c: p for p in root.iter() for c in p}
+    group = ET.Element(f"{_NT}g")
+    group.set("id", gid)
+    moved_any = False
+    # z-order 保持: 元の棚板クラスタ位置に group を差し込む(root 末尾ではなく)。
+    # brief M1 注記のとおり root.append すると対角センター線との交差で
+    # アンチエイリアスが微差する為、原位置へ挿入して非破壊性を担保する。
+    inserted = False
+
+    def _insert_group_at(parent, index):
+        nonlocal inserted
+        if inserted or parent is None:
+            return
+        index = max(0, min(index, len(list(parent))))
+        parent.insert(index, group)
+        inserted = True
+
+    # 1) 棚板帯をホストパスから切り出し（絶対M分割 or 相対 marker→絶対M付与）
+    band_cfg = _SHELF_BAND_MARKER.get((family, view))
+    if band_cfg is not None:
+        if isinstance(band_cfg, str):
+            marker, band_abs = band_cfg, True
+        else:
+            marker, band_abs = band_cfg["marker"], band_cfg["abs"]
+        for elem in list(root.iter(f"{_NT}path")):
+            d = elem.get("d", "")
+            if marker in d:
+                idx = d.index(marker)
+                parent = parent_map.get(elem)
+                band_class = elem.get("class") or body_cls
+                if idx == 0:
+                    # ホストパス全体が帯（例: section line200）→ パスごと group へ移動し
+                    #   body に空 d="" を残さない。原位置に group を差し込む。
+                    if parent is not None:
+                        _insert_group_at(parent, list(parent).index(elem))
+                        parent.remove(elem)
+                    if not elem.get("class"):
+                        elem.set("class", body_cls)
+                    group.append(elem)
+                else:
+                    head_d = d[:idx]
+                    tail_d = d[idx:]
+                    elem.set("d", head_d)         # body 側（帯より前）を残す
+                    if not band_abs:
+                        # 相対始まりの帯に絶対起点 M を前置（standalone として妥当に）
+                        ex, ey = _path_end_point(head_d)
+                        tail_d = f"M{ex:.4f} {ey:.4f}" + tail_d
+                    # host の直後に group を差し込む（帯は元々 host の末尾に描画）
+                    if parent is not None:
+                        _insert_group_at(parent, list(parent).index(elem) + 1)
+                    band = ET.SubElement(group, _NT_PATH)
+                    band.set("d", tail_d)         # 絶対M始まり
+                    band.set("class", band_class)
+                moved_any = True
+                break
+
+    # 2) 矢印ヘッド/シャフトの独立パスを回収（融合パスは分割）
+    prefixes = _SHELF_ARROW_PREFIX.get((family, view), [])
+    for elem in list(root.iter(f"{_NT}path")):
+        d = elem.get("d", "")
+        matched = next((p for p in prefixes if d.startswith(p)), None)
+        if matched is None:
+            continue
+        split_cfg = _SHELF_TAIL_SPLIT.get((family, view, matched))
+        parent = parent_map.get(elem)
+        if parent is not None and not inserted:
+            _insert_group_at(parent, list(parent).index(elem))
+        if split_cfg:
+            tail = _split_tail(elem, split_cfg)
+            if tail is not None and parent is not None:
+                # tail は body に残すが、クラスタの z 位置（group 直後）に置く
+                if inserted and group in list(parent):
+                    parent.insert(list(parent).index(group) + 1, tail)
+                else:
+                    parent.append(tail)
+        if parent is not None:
+            parent.remove(elem)
+        group.append(elem)
+        moved_any = True
+
+    if not moved_any:
+        return None
+    if not inserted:
+        root.append(group)
+    return group
+
+
+def _multiply_shelves(root, spec: OrderSpec):
+    """全ビューで棚板グループを抽出し、tana_count>=2 なら均等割りで複製する。
+
+    N=1 は非破壊で描画する必要がある(ベースライン=改修前と完全一致が製品要件)。
+    棚板帯は正面図ではホストパスの箱枠+ダボ格子の破線と 1 ストローク内で融合して
+    ラスタライズされており、帯を別 <path> に切り出すと重なり画素のアンチエイリアス
+    合成が変わり ≤18 画素(最大 delta 39/255、視認不能)の差分が不可避に生じる
+    (同一 z へその場分割しても同差分が出ることを確認済み)。
+    従って N=1 では抽出(破壊的分割)を行わずテンプレートをそのまま描画する。
+    抽出そのものの構造検証は test_shelf_count.py テスト4 で、N>=2 の見た目は
+    gen_shelf_samples.py の目視で担保する。"""
+    import copy
+    n = getattr(spec, "tana_count", 1) or 1
+    if n <= 1:
+        return  # N=1 は改修前と完全一致（破壊的な帯分割を行わない）
+    family = _shelf_family(spec)
+    for view in _SHELF_VIEWS:
+        group = _extract_shelf_group(root, family, view)
+        if group is None:
+            continue
+        center = _SHELF_CENTER[(family, view)]
+        _hide_element(group)
+        for ty in _shelf_targets(family, view, n):
+            dy = ty - center
+            clone = copy.deepcopy(group)
+            clone.attrib.pop("id", None)
+            clone.attrib.pop("display", None)
+            clone.set("transform", f"translate(0 {dy:.3f})")
+            root.append(clone)
+
+
 def _select_template(spec: OrderSpec) -> str:
     """スペックに応じたSVGテンプレートファイル名を返す"""
     if spec.tobira_enchou and spec.kirikake:
@@ -442,6 +711,9 @@ def generate_png(spec: OrderSpec, output_path: Optional[str] = None) -> str:
     _control_filler_visibility(root, spec)
     _adjust_dimlines_for_filler(root, spec)
     _control_hanger_pipe(root, spec)
+
+    # ── 棚板 抽出 & N 枚複製 ───────────────────────────────────────
+    _multiply_shelves(root, spec)
 
     # ── 日本語テキストを非表示（svglib はレンダリング不可） ──────
     _hide_japanese_in_svg(root)
