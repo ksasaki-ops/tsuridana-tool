@@ -86,14 +86,22 @@ def _load_root(tpl):
     return ET.parse(asset(tpl)).getroot()
 
 
-# 4-1: 各ビューで棚板グループが生成され、子要素を最低3つ(帯+矢印)持つ
+def _sub(g, sub_id):
+    return next((s for s in g if s.get("id") == sub_id), None)
+
+
+# 4-1: 各ビューで board/arrow サブグループが生成され、それぞれ path を持つ
 root_a = _load_root("template_standard.svg")
 for view in _SHELF_VIEWS:
     g = _extract_shelf_group(root_a, "A", view)
     assert g is not None, f"FAIL: shelf-{view} 抽出できない"
-    n_children = len(list(g))
-    assert n_children >= 3, f"FAIL: shelf-{view} 子要素不足({n_children})"
-    print(f"  OK: shelf-{view} 抽出 子要素={n_children}")
+    board = _sub(g, f"shelf-{view}-board")
+    arrow = _sub(g, f"shelf-{view}-arrow")
+    nb = len(list(board)) if board is not None else 0
+    na = len(list(arrow)) if arrow is not None else 0
+    assert nb >= 1, f"FAIL: shelf-{view} board サブグループが空({nb})"
+    assert na >= 1, f"FAIL: shelf-{view} arrow サブグループが空({na})"
+    print(f"  OK: shelf-{view} 抽出 board={nb} arrow={na}")
 
 # 4-2: side 帯が section グループに混入していない(C2 回帰防止)
 #     section を単独抽出しても、section グループ内に side 帯 marker が無いこと
@@ -115,20 +123,40 @@ for n in (2, 3, 4):
         f"FAIL: N={n} translate群={len(translated)} 期待={n*len(_SHELF_VIEWS)}"
     print(f"  OK: N={n} translate群={len(translated)}")
 
+# 4-4: N>=2 では ↕矢印は中央1本のみ(arrow サブグループは据置)・元の板は非表示
+#      = 複数棚で各棚に矢印を付けて中央が潰れる不具合の回帰防止
+root_arr = _load_root("template_standard.svg")
+_multiply_shelves(root_arr, _spec(tana_count=3))
+for view in _SHELF_VIEWS:
+    grp = next(g for g in root_arr.iter(f"{_NT}g") if g.get("id") == f"shelf-{view}")
+    board = _sub(grp, f"shelf-{view}-board")
+    arrow = _sub(grp, f"shelf-{view}-arrow")
+    assert board is not None and board.get("display") == "none", \
+        f"FAIL: shelf-{view} 元の板が非表示になっていない"
+    assert arrow is not None and arrow.get("display") != "none", \
+        f"FAIL: shelf-{view} 中央矢印が消えている(据置されていない)"
+    assert not arrow.get("transform"), \
+        f"FAIL: shelf-{view} 中央矢印が移動している(元位置のはず)"
+print("  OK: N=3 中央矢印1本据置・元板は非表示(全ビュー)")
+
 # === テスト5: 抽出とツリー構造(Family B) ===
 print("=== テスト5: 抽出ツリー検証(Family B) ===")
 
 _B_TEMPLATES = ("template_tobira.svg", "template_tobira_kirikake.svg")
 
-# 5-1: 各テンプレート×各ビューで棚板グループが生成され、子要素を最低3つ(帯+矢印)持つ
+# 5-1: 各テンプレート×各ビューで board/arrow サブグループが生成され、それぞれ path を持つ
 for tpl in _B_TEMPLATES:
     root_b = _load_root(tpl)
     for view in _SHELF_VIEWS:
         g = _extract_shelf_group(root_b, "B", view)
         assert g is not None, f"FAIL: {tpl} shelf-{view}(B) 抽出できない"
-        n_children = len(list(g))
-        assert n_children >= 3, f"FAIL: {tpl} shelf-{view}(B) 子要素不足({n_children})"
-        print(f"  OK: {tpl} shelf-{view}(B) 抽出 子要素={n_children}")
+        board = _sub(g, f"shelf-{view}-board")
+        arrow = _sub(g, f"shelf-{view}-arrow")
+        nb = len(list(board)) if board is not None else 0
+        na = len(list(arrow)) if arrow is not None else 0
+        assert nb >= 1, f"FAIL: {tpl} shelf-{view}(B) board 空({nb})"
+        assert na >= 1, f"FAIL: {tpl} shelf-{view}(B) arrow 空({na})"
+        print(f"  OK: {tpl} shelf-{view}(B) board={nb} arrow={na}")
 
 
 def _band_marker_str(family, view):

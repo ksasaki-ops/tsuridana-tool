@@ -540,7 +540,31 @@ def _split_tail(elem, split_cfg):
     return tail
 
 
+# 棚板帯パスの末尾に融合している「上矢印ヘッド」(三角形)を検出する正規表現。
+# 帯は h/H/v/V で描かれ、矢印ヘッドのみ l<±3.x><∓13.x> の斜辺を持つ。
+_ARROWHEAD_RE = re.compile(r"l-?3\.[67][ ,]?-?1[34]\.[78]")
+
+
+def _split_band_arrowtail(d: str):
+    """棚板帯 d の末尾に融合した矢印ヘッド部を切り離す。
+    戻り値 (board_d, tail_d)。融合が無ければ (d, None)。
+    tail_d は元の相対始まり断片のまま返す（呼び出し側で絶対M付与）。"""
+    m = _ARROWHEAD_RE.search(d)
+    if not m:
+        return d, None
+    head = d[:m.start()]
+    cut = max(head.rfind("m"), head.rfind("M"))
+    if cut <= 0:
+        return d, None
+    return d[:cut], d[cut:]
+
+
 def _extract_shelf_group(root, family: str, view: str):
+    """棚板の帯(板)と↕矢印を切り出し、<g id="shelf-{view}"> を返す。
+    グループは board サブグループ(<g id="shelf-{view}-board">=板の線のみ)と
+    arrow サブグループ(<g id="shelf-{view}-arrow">=シャフト+矢印ヘッド)に分ける。
+    複数枚描画時は board のみ複製し、arrow は中央に1本だけ残せるようにするため。
+    N=1 では抽出しない(_multiply_shelves が早期 return)ので、この関数は N>=2 専用。"""
     gid = f"shelf-{view}"
     for g in root.iter(f"{_NT}g"):
         if g.get("id") == gid:
@@ -550,21 +574,14 @@ def _extract_shelf_group(root, family: str, view: str):
     parent_map = {c: p for p in root.iter() for c in p}
     group = ET.Element(f"{_NT}g")
     group.set("id", gid)
+    board_g = ET.SubElement(group, f"{_NT}g")
+    board_g.set("id", f"{gid}-board")
+    arrow_g = ET.SubElement(group, f"{_NT}g")
+    arrow_g.set("id", f"{gid}-arrow")
     moved_any = False
-    # z-order 保持: 元の棚板クラスタ位置に group を差し込む(root 末尾ではなく)。
-    # brief M1 注記のとおり root.append すると対角センター線との交差で
-    # アンチエイリアスが微差する為、原位置へ挿入して非破壊性を担保する。
-    inserted = False
 
-    def _insert_group_at(parent, index):
-        nonlocal inserted
-        if inserted or parent is None:
-            return
-        index = max(0, min(index, len(list(parent))))
-        parent.insert(index, group)
-        inserted = True
-
-    # 1) 棚板帯をホストパスから切り出し（絶対M分割 or 相対 marker→絶対M付与）
+    # 1) 棚板帯をホストパスから切り出し（絶対M分割 or 相対 marker→絶対M付与）。
+    #    帯に融合した上矢印ヘッドは切り離して arrow サブグループへ移す。
     band_cfg = _SHELF_BAND_MARKER.get((family, view))
     if band_cfg is not None:
         if isinstance(band_cfg, str):
@@ -578,32 +595,30 @@ def _extract_shelf_group(root, family: str, view: str):
                 parent = parent_map.get(elem)
                 band_class = elem.get("class") or body_cls
                 if idx == 0:
-                    # ホストパス全体が帯（例: section line200）→ パスごと group へ移動し
-                    #   body に空 d="" を残さない。原位置に group を差し込む。
+                    # ホストパス全体が帯 → パスごと除去して d を採用
+                    band_d = d
                     if parent is not None:
-                        _insert_group_at(parent, list(parent).index(elem))
                         parent.remove(elem)
-                    if not elem.get("class"):
-                        elem.set("class", body_cls)
-                    group.append(elem)
                 else:
-                    head_d = d[:idx]
-                    tail_d = d[idx:]
-                    elem.set("d", head_d)         # body 側（帯より前）を残す
+                    band_d = d[idx:]
+                    elem.set("d", d[:idx])        # body 側（帯より前）を残す
                     if not band_abs:
-                        # 相対始まりの帯に絶対起点 M を前置（standalone として妥当に）
-                        ex, ey = _path_end_point(head_d)
-                        tail_d = f"M{ex:.4f} {ey:.4f}" + tail_d
-                    # host の直後に group を差し込む（帯は元々 host の末尾に描画）
-                    if parent is not None:
-                        _insert_group_at(parent, list(parent).index(elem) + 1)
-                    band = ET.SubElement(group, _NT_PATH)
-                    band.set("d", tail_d)         # 絶対M始まり
-                    band.set("class", band_class)
+                        ex, ey = _path_end_point(d[:idx])
+                        band_d = f"M{ex:.4f} {ey:.4f}" + band_d
+                # 帯末尾に融合した矢印ヘッドを分離
+                board_d, tail_d = _split_band_arrowtail(band_d)
+                bp = ET.SubElement(board_g, _NT_PATH)
+                bp.set("d", board_d)
+                bp.set("class", band_class)
+                if tail_d:
+                    tx, ty = _path_end_point(board_d)
+                    ap = ET.SubElement(arrow_g, _NT_PATH)
+                    ap.set("d", f"M{tx:.4f} {ty:.4f}" + tail_d)
+                    ap.set("class", band_class)
                 moved_any = True
                 break
 
-    # 2) 矢印ヘッド/シャフトの独立パスを回収（融合パスは分割）
+    # 2) 矢印ヘッド/シャフトの独立パスを arrow サブグループへ回収（融合パスは分割）
     prefixes = _SHELF_ARROW_PREFIX.get((family, view), [])
     for elem in list(root.iter(f"{_NT}path")):
         d = elem.get("d", "")
@@ -612,39 +627,41 @@ def _extract_shelf_group(root, family: str, view: str):
             continue
         split_cfg = _SHELF_TAIL_SPLIT.get((family, view, matched))
         parent = parent_map.get(elem)
-        if parent is not None and not inserted:
-            _insert_group_at(parent, list(parent).index(elem))
         if split_cfg:
             tail = _split_tail(elem, split_cfg)
             if tail is not None and parent is not None:
-                # tail は body に残すが、クラスタの z 位置（group 直後）に置く
-                if inserted and group in list(parent):
-                    parent.insert(list(parent).index(group) + 1, tail)
-                else:
-                    parent.append(tail)
+                parent.append(tail)   # 棚板と無関係な残余(ダボ等)は body に残す
         if parent is not None:
             parent.remove(elem)
-        group.append(elem)
+        arrow_g.append(elem)
         moved_any = True
 
     if not moved_any:
         return None
-    if not inserted:
-        root.append(group)
+    root.append(group)
     return group
 
 
+def _find_subgroup(group, sub_id):
+    for sub in group:
+        if sub.get("id") == sub_id:
+            return sub
+    return None
+
+
 def _multiply_shelves(root, spec: OrderSpec):
-    """全ビューで棚板グループを抽出し、tana_count>=2 なら均等割りで複製する。
+    """全ビューで棚板グループを抽出し、tana_count>=2 なら棚板(板)を均等割りで複製する。
 
     N=1 は非破壊で描画する必要がある(ベースライン=改修前と完全一致が製品要件)。
     棚板帯は正面図ではホストパスの箱枠+ダボ格子の破線と 1 ストローク内で融合して
     ラスタライズされており、帯を別 <path> に切り出すと重なり画素のアンチエイリアス
-    合成が変わり ≤18 画素(最大 delta 39/255、視認不能)の差分が不可避に生じる
-    (同一 z へその場分割しても同差分が出ることを確認済み)。
+    合成が変わり ≤18 画素(最大 delta 39/255、視認不能)の差分が不可避に生じる。
     従って N=1 では抽出(破壊的分割)を行わずテンプレートをそのまま描画する。
-    抽出そのものの構造検証は test_shelf_count.py テスト4 で、N>=2 の見た目は
-    gen_shelf_samples.py の目視で担保する。"""
+
+    N>=2 では ↕可動矢印は各棚に付けず「中央に代表1本」だけ残す(棚間隔より矢印が
+    高く、各棚に付けると隣接矢印が重なって中央が潰れる不具合を避けるため)。
+    具体的には board サブグループ(板の線)のみを N 枚複製し、arrow サブグループ
+    (元の中央位置の矢印)は 1 本だけそのまま残す。"""
     import copy
     n = getattr(spec, "tana_count", 1) or 1
     if n <= 1:
@@ -654,11 +671,14 @@ def _multiply_shelves(root, spec: OrderSpec):
         group = _extract_shelf_group(root, family, view)
         if group is None:
             continue
+        board_g = _find_subgroup(group, f"shelf-{view}-board")
+        if board_g is None or len(list(board_g)) == 0:
+            continue  # 板が取れなければ複製しない（arrow は元位置のまま）
         center = _SHELF_CENTER[(family, view)]
-        _hide_element(group)
+        _hide_element(board_g)   # 元の中央板は隠す（arrow サブグループは残す＝中央1本）
         for ty in _shelf_targets(family, view, n):
             dy = ty - center
-            clone = copy.deepcopy(group)
+            clone = copy.deepcopy(board_g)
             clone.attrib.pop("id", None)
             clone.attrib.pop("display", None)
             clone.set("transform", f"translate(0 {dy:.3f})")
