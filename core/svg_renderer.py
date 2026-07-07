@@ -611,9 +611,15 @@ def _extract_shelf_group(root, family: str, view: str):
                 bp.set("d", board_d)
                 bp.set("class", band_class)
                 if tail_d:
-                    tx, ty = _path_end_point(board_d)
+                    if tail_d[0] == "m":
+                        # 相対始まりの尾部にのみ絶対起点 M を前置する。
+                        # 既に絶対 M 始まり(Family B 等)の場合に前置すると
+                        #   "MxyMxy" となり svglib が2つ目の M を直線と誤解釈して
+                        #   斜線が描かれるため前置してはならない。
+                        tx, ty = _path_end_point(board_d)
+                        tail_d = f"M{tx:.4f} {ty:.4f}" + tail_d
                     ap = ET.SubElement(arrow_g, _NT_PATH)
-                    ap.set("d", f"M{tx:.4f} {ty:.4f}" + tail_d)
+                    ap.set("d", tail_d)
                     ap.set("class", band_class)
                 moved_any = True
                 break

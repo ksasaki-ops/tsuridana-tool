@@ -221,4 +221,23 @@ for key, cfg in _SHELF_TAIL_SPLIT.items():
 
 print(f"  OK: band/tail-split marker 全 {_marker_check_count} 件(テンプレート×marker組)が各ファイルで一意")
 
+# === テスト7: 抽出パスに二重先頭M(MxyMxy)が無い(斜線バグ回帰防止) ===
+# 帯末尾の矢印ヘッドが元々絶対M始まりの場合に絶対M起点を前置すると
+# "MxyMxy" になり svglib が2つ目の M を直線と誤解釈して斜線を描く不具合の回帰防止。
+print("=== テスト7: 二重先頭M 回帰防止 ===")
+import re as _re7
+_LEAD_DOUBLE_M = _re7.compile(r"^M-?[\d.]+[ ,]-?[\d.]+M")
+_dbl_checked = 0
+for tpl, fam in [("template_standard.svg", "A"), ("template_kirikake.svg", "A"),
+                 ("template_tobira.svg", "B"), ("template_tobira_kirikake.svg", "B")]:
+    r = _load_root(tpl)
+    for view in _SHELF_VIEWS:
+        g = _extract_shelf_group(r, fam, view)
+        for p in g.iter(f"{_NT}path"):
+            d = p.get("d", "")
+            assert not _LEAD_DOUBLE_M.match(d), \
+                f"FAIL: {tpl} shelf-{view} に二重先頭M(斜線バグ): {d[:40]}"
+            _dbl_checked += 1
+print(f"  OK: 抽出パス {_dbl_checked} 本に二重先頭M なし")
+
 print("\n=== Task1 テストPASS ===")
