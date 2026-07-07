@@ -486,7 +486,9 @@ _SHELF_BAND_MARKER = {
     ("A", "side"):    "M803.7 209.6",
     ("A", "section"): "M544.7 661.3",
     ("B", "front"):   {"marker": "m158 126.7", "abs": False},
-    ("B", "side"):    {"marker": "V248m0 0H954.4", "abs": False},
+    # 側面図は板の「上端の破線(h-run)」から始めて板の両端を取り込む。
+    # 旧marker "V248m0 0H954.4" は下端(H-run)からで上端を取りこぼし単線化していた。
+    ("B", "side"):    {"marker": "m10.2 133.2", "abs": False},
     ("B", "section"): {"marker": "m-8.6-118.1", "abs": False},
 }
 # 矢印ヘッド/シャフト独立パスの先頭一致プレフィックス（上矢/下矢/シャフト）

@@ -240,4 +240,51 @@ for tpl, fam in [("template_standard.svg", "A"), ("template_kirikake.svg", "A"),
             _dbl_checked += 1
 print(f"  OK: 抽出パス {_dbl_checked} 本に二重先頭M なし")
 
+# === テスト8: 棚板 board は上下2端(水平線が2つの y 高さ)を持つ(単線化バグ回帰防止) ===
+# Family B 側面図で marker が板の下端からで上端を取りこぼし、board が単線化した不具合の回帰防止。
+print("=== テスト8: board 二重線(上下端) 検証 ===")
+
+
+def _horizontal_y_levels(d):
+    """パス d 中で水平セグメント(h/H)を描く際の y 値集合(0.5丸め)を返す。"""
+    toks = _re7.findall(r"[A-Za-z]|-?\d*\.?\d+", d)
+    x = y = 0.0
+    cmd = None
+    i = 0
+    levels = set()
+    while i < len(toks):
+        t = toks[i]
+        if t.isalpha():
+            cmd = t
+            i += 1
+            continue
+        v = float(t)
+        if cmd in ("M", "L"):
+            x = v; y = float(toks[i + 1]); i += 2; cmd = "L" if cmd == "M" else cmd
+        elif cmd in ("m", "l"):
+            x += v; y += float(toks[i + 1]); i += 2; cmd = "l" if cmd == "m" else cmd
+        elif cmd in ("H", "h"):
+            levels.add(round(y * 2) / 2); i += 1
+        elif cmd in ("V", "v"):
+            y = v if cmd == "V" else y + v; i += 1
+        else:
+            i += 1
+    return levels
+
+
+_board_checked = 0
+for tpl, fam in [("template_standard.svg", "A"), ("template_kirikake.svg", "A"),
+                 ("template_tobira.svg", "B"), ("template_tobira_kirikake.svg", "B")]:
+    r = _load_root(tpl)
+    for view in _SHELF_VIEWS:
+        g = _extract_shelf_group(r, fam, view)
+        board = _sub(g, f"shelf-{view}-board")
+        levels = set()
+        for p in board:
+            levels |= _horizontal_y_levels(p.get("d", ""))
+        assert len(levels) >= 2, \
+            f"FAIL: {tpl} shelf-{view} board が単線(水平y高さ {len(levels)}種): 板の上下端を取れていない"
+        _board_checked += 1
+print(f"  OK: 全 {_board_checked} board が上下2端(水平線2高さ以上)を保持")
+
 print("\n=== Task1 テストPASS ===")
