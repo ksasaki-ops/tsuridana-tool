@@ -411,6 +411,303 @@ def _strip_font_face(root):
 
 # ─── メイン生成関数 ────────────────────────────────────────────────
 
+# ─── 棚板複製ロジック ───────────────────────────────────────────────
+# 注: re は本ファイル冒頭(line 7)で import 済み。別名は作らない。
+
+# 英字は全て1トークンとして捕捉する。M m L l H h V v Z z 以外(C/S/Q/T/A 等)が
+# 出現したら下の else 分岐で ValueError を送出する(黙って取りこぼさない)。
+_PATH_TOKEN = re.compile(r"([A-Za-z])|(-?\d*\.?\d+)")
+
+
+def _path_end_point(d: str):
+    """パスデータ d を辿った終端の絶対座標 (x, y) を返す。対応: M m L l H h V v Z z。
+    それ以外のコマンド(曲線・円弧等)は ValueError。"""
+    tokens = []
+    for m in _PATH_TOKEN.finditer(d):
+        if m.group(1):
+            tokens.append(m.group(1))
+        else:
+            tokens.append(float(m.group(2)))
+
+    x = y = 0.0
+    start_x = start_y = 0.0
+    i = 0
+    cmd = None
+    while i < len(tokens):
+        t = tokens[i]
+        if isinstance(t, str):
+            cmd = t
+            i += 1
+            if cmd in ("Z", "z"):
+                x, y = start_x, start_y
+            continue
+        if cmd is None:
+            raise ValueError(f"数値がコマンド無しで出現: {d[:40]}")
+        if cmd in ("M", "L"):
+            x, y = tokens[i], tokens[i + 1]; i += 2
+            if cmd == "M":
+                start_x, start_y = x, y
+                cmd = "L"  # 以降の座標対は暗黙 LineTo
+        elif cmd in ("m", "l"):
+            x += tokens[i]; y += tokens[i + 1]; i += 2
+            if cmd == "m":
+                start_x, start_y = x, y
+                cmd = "l"
+        elif cmd == "H":
+            x = tokens[i]; i += 1
+        elif cmd == "h":
+            x += tokens[i]; i += 1
+        elif cmd == "V":
+            y = tokens[i]; i += 1
+        elif cmd == "v":
+            y += tokens[i]; i += 1
+        else:
+            raise ValueError(f"未対応コマンド: {cmd}")
+    return x, y
+
+
+_SHELF_VIEWS = ("front", "side", "section")
+
+_SHELF_CENTER = {
+    ("A", "front"): 218.25, ("A", "side"): 213.95, ("A", "section"): 656.9,
+    ("B", "front"): 226.35, ("B", "side"): 247.95, ("B", "section"): 657.15,
+}
+_SHELF_CAVITY = {
+    ("A", "front"): (105.0, 340.0), ("A", "side"): (110.0, 333.8),
+    ("A", "section"): (539.2, 766.5),
+    ("B", "front"): (105.0, 344.0), ("B", "side"): (110.0, 333.8),
+    ("B", "section"): (539.2, 766.0),
+}
+
+
+def _shelf_family(spec: OrderSpec) -> str:
+    return "B" if spec.tobira_enchou else "A"
+
+
+def _shelf_targets(family: str, view: str, n: int) -> list:
+    """内寸を(n+1)等分した絶対 y 目標位置リスト"""
+    top, bottom = _SHELF_CAVITY[(family, view)]
+    return [top + i / (n + 1) * (bottom - top) for i in range(1, n + 1)]
+
+
+# 棚板帯 marker（ホストパス d 内で棚板帯部が始まる位置の一意な部分文字列）。
+#   値は str（絶対M始まり=そのまま帯 d に採用）または
+#   dict {"marker": 区切り, "abs": bool}。abs=False の場合は marker が相対始まり
+#   なので、直前までを辿った絶対座標を _path_end_point で求めて M を前置する。
+# Family A: 帯は箱枠パス内に絶対M subpath として融合（絶対M）。
+# Family B: 帯は箱枠/格子パス内に相対 subpath として融合（abs=False で絶対M付与）。
+_SHELF_BAND_MARKER = {
+    ("A", "front"):   "M537.7 227",
+    ("A", "side"):    "M803.7 209.6",
+    ("A", "section"): "M544.7 661.3",
+    ("B", "front"):   {"marker": "m158 126.7", "abs": False},
+    # 側面図は板の「上端の破線(h-run)」から始めて板の両端を取り込む。
+    # 旧marker "V248m0 0H954.4" は下端(H-run)からで上端を取りこぼし単線化していた。
+    ("B", "side"):    {"marker": "m10.2 133.2", "abs": False},
+    ("B", "section"): {"marker": "m-8.6-118.1", "abs": False},
+}
+# 矢印ヘッド/シャフト独立パスの先頭一致プレフィックス（上矢/下矢/シャフト）
+_SHELF_ARROW_PREFIX = {
+    ("A", "front"):   ["M302.7 203.9", "M310 232.7", "M306.3 190.1"],
+    ("A", "side"):    ["M886.6 197.8", "M893.9 226.6", "M890.3 184.1"],
+    ("A", "section"): ["M302.7 646.8", "M310 675.6", "M306.3 633"],
+    ("B", "front"):   ["M295.9 211.9", "M303.2 240.7", "M299.6 198.2"],
+    ("B", "side"):    ["M886.6 233.6", "M893.9 262.4", "M890.3 219.8"],
+    ("B", "section"): ["M295.9 642.8", "M303.2 671.6", "M299.6 629"],
+}
+# パス内で棚板と無関係な後続部を切り離すための「絶対Mまたは相対」区切り。
+#   {"marker": 区切り文字列, "abs": True=区切りが絶対Mなのでそのまま body に残す /
+#                                   False=相対始まりなので _path_end_point で絶対M付与}
+_SHELF_TAIL_SPLIT = {
+    # section shaft は line204 で side 帯と融合。side 帯(絶対M)を body に残す
+    ("A", "section", "M306.3 633"): {"marker": "M803.7 209.6", "abs": True},
+    # front shaft は line99 で dowel マーカーと融合。dowel は相対 m 始まり
+    ("A", "front", "M306.3 190.1"): {"marker": "m92.1-137.9", "abs": False},
+    # B front シャフトは dowel と融合（相対 m 始まり）
+    ("B", "front", "M299.6 198.2"): {"marker": "m92-146", "abs": False},
+    # B side シャフトは dowel と融合（dowel は絶対 M 始まり）
+    ("B", "side", "M890.3 219.8"): {"marker": "M816.6 110", "abs": True},
+    # B section シャフト(M299.6 629)は融合なし（分割不要）
+}
+_NT_PATH = f"{_NT}path"
+
+
+def _shelf_body_class(family: str) -> str:
+    return "g5" if family == "A" else "g3"
+
+
+def _split_tail(elem, split_cfg):
+    """elem の d を split_cfg["marker"] で分割。前半を elem に残し(→呼び出し側で group へ移動)、
+    後半(tail)は body に残すための新規 <path> を生成して返す。tail が相対始まりなら絶対M付与。
+    融合していなければ(marker 不在) None を返す。"""
+    d = elem.get("d", "")
+    marker = split_cfg["marker"]
+    if marker not in d:
+        return None  # 融合していない個体（kirikake 等で形状差がある場合の安全策）
+    si = d.index(marker)
+    head_d, tail_d = d[:si], d[si:]
+    elem.set("d", head_d)
+    if not split_cfg["abs"]:
+        ex, ey = _path_end_point(head_d)
+        tail_d = f"M{ex:.4f} {ey:.4f}" + tail_d  # 相対始まりに絶対起点を付与
+    tail = ET.Element(_NT_PATH)
+    tail.set("d", tail_d)
+    if elem.get("class"):
+        tail.set("class", elem.get("class"))
+    return tail
+
+
+# 棚板帯パスの末尾に融合している「上矢印ヘッド」(三角形)を検出する正規表現。
+# 帯は h/H/v/V で描かれ、矢印ヘッドのみ l<±3.x><∓13.x> の斜辺を持つ。
+_ARROWHEAD_RE = re.compile(r"l-?3\.[67][ ,]?-?1[34]\.[78]")
+
+
+def _split_band_arrowtail(d: str):
+    """棚板帯 d の末尾に融合した矢印ヘッド部を切り離す。
+    戻り値 (board_d, tail_d)。融合が無ければ (d, None)。
+    tail_d は元の相対始まり断片のまま返す（呼び出し側で絶対M付与）。"""
+    m = _ARROWHEAD_RE.search(d)
+    if not m:
+        return d, None
+    head = d[:m.start()]
+    cut = max(head.rfind("m"), head.rfind("M"))
+    if cut <= 0:
+        return d, None
+    return d[:cut], d[cut:]
+
+
+def _extract_shelf_group(root, family: str, view: str):
+    """棚板の帯(板)と↕矢印を切り出し、<g id="shelf-{view}"> を返す。
+    グループは board サブグループ(<g id="shelf-{view}-board">=板の線のみ)と
+    arrow サブグループ(<g id="shelf-{view}-arrow">=シャフト+矢印ヘッド)に分ける。
+    複数枚描画時は board のみ複製し、arrow は中央に1本だけ残せるようにするため。
+    N=1 では抽出しない(_multiply_shelves が早期 return)ので、この関数は N>=2 専用。"""
+    gid = f"shelf-{view}"
+    for g in root.iter(f"{_NT}g"):
+        if g.get("id") == gid:
+            return g
+
+    body_cls = _shelf_body_class(family)
+    parent_map = {c: p for p in root.iter() for c in p}
+    group = ET.Element(f"{_NT}g")
+    group.set("id", gid)
+    board_g = ET.SubElement(group, f"{_NT}g")
+    board_g.set("id", f"{gid}-board")
+    arrow_g = ET.SubElement(group, f"{_NT}g")
+    arrow_g.set("id", f"{gid}-arrow")
+    moved_any = False
+
+    # 1) 棚板帯をホストパスから切り出し（絶対M分割 or 相対 marker→絶対M付与）。
+    #    帯に融合した上矢印ヘッドは切り離して arrow サブグループへ移す。
+    band_cfg = _SHELF_BAND_MARKER.get((family, view))
+    if band_cfg is not None:
+        if isinstance(band_cfg, str):
+            marker, band_abs = band_cfg, True
+        else:
+            marker, band_abs = band_cfg["marker"], band_cfg["abs"]
+        for elem in list(root.iter(f"{_NT}path")):
+            d = elem.get("d", "")
+            if marker in d:
+                idx = d.index(marker)
+                parent = parent_map.get(elem)
+                band_class = elem.get("class") or body_cls
+                if idx == 0:
+                    # ホストパス全体が帯 → パスごと除去して d を採用
+                    band_d = d
+                    if parent is not None:
+                        parent.remove(elem)
+                else:
+                    band_d = d[idx:]
+                    elem.set("d", d[:idx])        # body 側（帯より前）を残す
+                    if not band_abs:
+                        ex, ey = _path_end_point(d[:idx])
+                        band_d = f"M{ex:.4f} {ey:.4f}" + band_d
+                # 帯末尾に融合した矢印ヘッドを分離
+                board_d, tail_d = _split_band_arrowtail(band_d)
+                bp = ET.SubElement(board_g, _NT_PATH)
+                bp.set("d", board_d)
+                bp.set("class", band_class)
+                if tail_d:
+                    if tail_d[0] == "m":
+                        # 相対始まりの尾部にのみ絶対起点 M を前置する。
+                        # 既に絶対 M 始まり(Family B 等)の場合に前置すると
+                        #   "MxyMxy" となり svglib が2つ目の M を直線と誤解釈して
+                        #   斜線が描かれるため前置してはならない。
+                        tx, ty = _path_end_point(board_d)
+                        tail_d = f"M{tx:.4f} {ty:.4f}" + tail_d
+                    ap = ET.SubElement(arrow_g, _NT_PATH)
+                    ap.set("d", tail_d)
+                    ap.set("class", band_class)
+                moved_any = True
+                break
+
+    # 2) 矢印ヘッド/シャフトの独立パスを arrow サブグループへ回収（融合パスは分割）
+    prefixes = _SHELF_ARROW_PREFIX.get((family, view), [])
+    for elem in list(root.iter(f"{_NT}path")):
+        d = elem.get("d", "")
+        matched = next((p for p in prefixes if d.startswith(p)), None)
+        if matched is None:
+            continue
+        split_cfg = _SHELF_TAIL_SPLIT.get((family, view, matched))
+        parent = parent_map.get(elem)
+        if split_cfg:
+            tail = _split_tail(elem, split_cfg)
+            if tail is not None and parent is not None:
+                parent.append(tail)   # 棚板と無関係な残余(ダボ等)は body に残す
+        if parent is not None:
+            parent.remove(elem)
+        arrow_g.append(elem)
+        moved_any = True
+
+    if not moved_any:
+        return None
+    root.append(group)
+    return group
+
+
+def _find_subgroup(group, sub_id):
+    for sub in group:
+        if sub.get("id") == sub_id:
+            return sub
+    return None
+
+
+def _multiply_shelves(root, spec: OrderSpec):
+    """全ビューで棚板グループを抽出し、tana_count>=2 なら棚板(板)を均等割りで複製する。
+
+    N=1 は非破壊で描画する必要がある(ベースライン=改修前と完全一致が製品要件)。
+    棚板帯は正面図ではホストパスの箱枠+ダボ格子の破線と 1 ストローク内で融合して
+    ラスタライズされており、帯を別 <path> に切り出すと重なり画素のアンチエイリアス
+    合成が変わり ≤18 画素(最大 delta 39/255、視認不能)の差分が不可避に生じる。
+    従って N=1 では抽出(破壊的分割)を行わずテンプレートをそのまま描画する。
+
+    N>=2 では ↕可動矢印は各棚に付けず「中央に代表1本」だけ残す(棚間隔より矢印が
+    高く、各棚に付けると隣接矢印が重なって中央が潰れる不具合を避けるため)。
+    具体的には board サブグループ(板の線)のみを N 枚複製し、arrow サブグループ
+    (元の中央位置の矢印)は 1 本だけそのまま残す。"""
+    import copy
+    n = getattr(spec, "tana_count", 1) or 1
+    if n <= 1:
+        return  # N=1 は改修前と完全一致（破壊的な帯分割を行わない）
+    family = _shelf_family(spec)
+    for view in _SHELF_VIEWS:
+        group = _extract_shelf_group(root, family, view)
+        if group is None:
+            continue
+        board_g = _find_subgroup(group, f"shelf-{view}-board")
+        if board_g is None or len(list(board_g)) == 0:
+            continue  # 板が取れなければ複製しない（arrow は元位置のまま）
+        center = _SHELF_CENTER[(family, view)]
+        _hide_element(board_g)   # 元の中央板は隠す（arrow サブグループは残す＝中央1本）
+        for ty in _shelf_targets(family, view, n):
+            dy = ty - center
+            clone = copy.deepcopy(board_g)
+            clone.attrib.pop("id", None)
+            clone.attrib.pop("display", None)
+            clone.set("transform", f"translate(0 {dy:.3f})")
+            root.append(clone)
+
+
 def _select_template(spec: OrderSpec) -> str:
     """スペックに応じたSVGテンプレートファイル名を返す"""
     if spec.tobira_enchou and spec.kirikake:
@@ -457,6 +754,9 @@ def generate_png(spec: OrderSpec, output_path: Optional[str] = None) -> str:
     _control_filler_visibility(root, spec)
     _adjust_dimlines_for_filler(root, spec)
     _control_hanger_pipe(root, spec)
+
+    # ── 棚板 抽出 & N 枚複製 ───────────────────────────────────────
+    _multiply_shelves(root, spec)
 
     # ── 日本語テキストを非表示（svglib はレンダリング不可） ──────
     _hide_japanese_in_svg(root)

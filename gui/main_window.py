@@ -14,6 +14,7 @@ from core.text_builder import OrderSpec
 
 
 FILLER_OPTIONS = ["両側", "左のみ", "右のみ", "なし"]
+TANA_COUNT_OPTIONS = ["1", "2", "3", "4"]
 MATERIAL_OPTIONS = [
     "白ポリ",
     "ミディアムウォールナット",
@@ -112,6 +113,13 @@ class MainWindow:
         ttk.Combobox(f, textvariable=self.var_material, values=MATERIAL_OPTIONS, width=22, state="readonly").grid(
             row=row, column=1, columnspan=3, sticky="w", **pad
         )
+        row += 1
+
+        # ─── 棚板枚数 ───
+        tk.Label(f, text="棚板枚数").grid(row=row, column=0, sticky="e", **pad)
+        self.var_tana_count = tk.StringVar(value="1")
+        ttk.Combobox(f, textvariable=self.var_tana_count, values=TANA_COUNT_OPTIONS,
+                     width=6, state="readonly").grid(row=row, column=1, sticky="w", **pad)
         row += 1
 
         # ─── フィラー ───
@@ -247,6 +255,7 @@ class MainWindow:
             hassou_no=self.var_hassou_no.get().strip(),
             hassou_date=self.var_hassou_date.get().strip(),
             bikou=" ".join(self.var_bikou.get().split()),
+            tana_count=int(self.var_tana_count.get()),
         )
 
     # ──────────────────────────────────────────
