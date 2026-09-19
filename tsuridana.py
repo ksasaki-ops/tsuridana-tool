@@ -16,10 +16,14 @@ import tkinter as tk
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from gui.main_window import MainWindow
+from utils.path_utils import asset
 
 
 def main():
     root = tk.Tk()
+    icon = asset("tsuridana.ico")
+    if os.path.exists(icon):
+        root.iconbitmap(icon)
     app = MainWindow(root)
     root.mainloop()
 

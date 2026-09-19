@@ -11,6 +11,7 @@ from tkinter import messagebox, ttk
 from core.excel_writer import generate_excel
 from core.image_generator import generate_jpg
 from core.text_builder import OrderSpec
+from utils.settings import load_settings, remember_tantou, save_settings
 
 
 FILLER_OPTIONS = ["両側", "左のみ", "右のみ", "なし"]
@@ -39,8 +40,10 @@ def _open_file(path: str):
 
 
 class MainWindow:
-    def __init__(self, root: tk.Tk):
+    def __init__(self, root: tk.Tk, settings_path: str | None = None):
         self.root = root
+        self._settings_path = settings_path
+        self._settings = load_settings(settings_path)
         root.title("洗濯機上吊戸棚 発注ツール")
         root.resizable(False, False)
         self._build_ui()
@@ -61,6 +64,16 @@ class MainWindow:
         )
         row += 1
 
+        # ─── 担当者（選択を記憶・手入力で候補に追加） ───
+        tk.Label(f, text="担当者").grid(row=row, column=0, sticky="e", **pad)
+        self.var_tantou = tk.StringVar(value=self._settings["tantou"])
+        self.combo_tantou = ttk.Combobox(f, textvariable=self.var_tantou,
+                                         values=self._settings["tantou_list"], width=16)
+        self.combo_tantou.grid(row=row, column=1, sticky="w", **pad)
+        self.combo_tantou.bind("<<ComboboxSelected>>", lambda e: self._remember_tantou())
+        self.combo_tantou.bind("<FocusOut>", lambda e: self._remember_tantou())
+        row += 1
+
         # ─── お客様名 / 物件名 ───
         tk.Label(f, text="お客様名").grid(row=row, column=0, sticky="e", **pad)
         self.var_customer = tk.StringVar()
@@ -77,7 +90,7 @@ class MainWindow:
         tk.Entry(f, textvariable=self.var_hassou_no, width=18).grid(row=row, column=1, sticky="w", **pad)
 
         tk.Label(f, text="発注日").grid(row=row, column=2, sticky="e", **pad)
-        self.var_hassou_date = tk.StringVar(value=date.today().strftime("%Y-%m-%d"))
+        self.var_hassou_date = tk.StringVar()
         tk.Entry(f, textvariable=self.var_hassou_date, width=12).grid(row=row, column=3, sticky="w", **pad)
         row += 1
 
@@ -92,7 +105,7 @@ class MainWindow:
         # ─── 面材合わせ ───
         sep_row = row
         tk.Label(f, text="面材合わせ").grid(row=row, column=0, sticky="e", **pad)
-        self.var_men_zai = tk.BooleanVar(value=True)
+        self.var_men_zai = tk.BooleanVar()
         tk.Radiobutton(f, text="あり", variable=self.var_men_zai, value=True, command=self._toggle_men_zai).grid(
             row=row, column=1, sticky="w"
         )
@@ -109,7 +122,7 @@ class MainWindow:
 
         # ─── 本体材質 ───
         tk.Label(f, text="本体材質").grid(row=row, column=0, sticky="e", **pad)
-        self.var_material = tk.StringVar(value=MATERIAL_OPTIONS[0])
+        self.var_material = tk.StringVar()
         ttk.Combobox(f, textvariable=self.var_material, values=MATERIAL_OPTIONS, width=22, state="readonly").grid(
             row=row, column=1, columnspan=3, sticky="w", **pad
         )
@@ -117,14 +130,14 @@ class MainWindow:
 
         # ─── 棚板枚数 ───
         tk.Label(f, text="棚板枚数").grid(row=row, column=0, sticky="e", **pad)
-        self.var_tana_count = tk.StringVar(value="1")
+        self.var_tana_count = tk.StringVar()
         ttk.Combobox(f, textvariable=self.var_tana_count, values=TANA_COUNT_OPTIONS,
                      width=6, state="readonly").grid(row=row, column=1, sticky="w", **pad)
         row += 1
 
         # ─── フィラー ───
         tk.Label(f, text="フィラー").grid(row=row, column=0, sticky="e", **pad)
-        self.var_filler = tk.StringVar(value="両側")
+        self.var_filler = tk.StringVar()
         filler_frame = tk.Frame(f)
         filler_frame.grid(row=row, column=1, columnspan=3, sticky="w")
         for opt in FILLER_OPTIONS:
@@ -133,21 +146,21 @@ class MainWindow:
 
         # ─── HG ───
         tk.Label(f, text="ハンガーパイプ").grid(row=row, column=0, sticky="e", **pad)
-        self.var_hg = tk.BooleanVar(value=True)
+        self.var_hg = tk.BooleanVar()
         tk.Radiobutton(f, text="あり", variable=self.var_hg, value=True).grid(row=row, column=1, sticky="w")
         tk.Radiobutton(f, text="なし", variable=self.var_hg, value=False).grid(row=row, column=2, sticky="w")
         row += 1
 
         # ─── 扉延長 ───
         tk.Label(f, text="扉延長").grid(row=row, column=0, sticky="e", **pad)
-        self.var_tobira_enc = tk.BooleanVar(value=False)
+        self.var_tobira_enc = tk.BooleanVar()
         tk.Radiobutton(f, text="あり", variable=self.var_tobira_enc, value=True).grid(row=row, column=1, sticky="w")
         tk.Radiobutton(f, text="なし", variable=self.var_tobira_enc, value=False).grid(row=row, column=2, sticky="w")
         row += 1
 
         # ─── 切り欠き ───
         tk.Label(f, text="切り欠き").grid(row=row, column=0, sticky="e", **pad)
-        self.var_kirikake = tk.BooleanVar(value=False)
+        self.var_kirikake = tk.BooleanVar()
         tk.Radiobutton(f, text="あり", variable=self.var_kirikake, value=True, command=self._toggle_kirikake).grid(
             row=row, column=1, sticky="w"
         )
@@ -181,9 +194,43 @@ class MainWindow:
             side="left", padx=4
         )
 
-        # 初期状態更新
+        tk.Button(btn_frame, text="入力をクリア", width=12, command=self._on_clear).pack(side="left", padx=(16, 4))
+
+        # 初期状態
+        self._reset_fields()
+
+    # ──────────────────────────────────────────
+    # 入力クリア / 担当者の記憶
+    # ──────────────────────────────────────────
+    def _reset_fields(self):
+        """全項目を初期状態に戻す（担当者は次の発注でも同じなので残す）"""
+        for var in (self.var_customer, self.var_property, self.var_hassou_no,
+                    self.var_W, self.var_D, self.var_H, self.var_tobira_hinban,
+                    self.var_kk_W, self.var_kk_H, self.var_bikou):
+            var.set("")
+        self.var_hassou_date.set(date.today().strftime("%Y-%m-%d"))
+        self.var_men_zai.set(True)
+        self.var_material.set(MATERIAL_OPTIONS[0])
+        self.var_tana_count.set("1")
+        self.var_filler.set("両側")
+        self.var_hg.set(True)
+        self.var_tobira_enc.set(False)
+        self.var_kirikake.set(False)
         self._toggle_men_zai()
         self._toggle_kirikake()
+
+    def _on_clear(self):
+        if messagebox.askyesno("入力をクリア", "入力内容をクリアして、次の発注を入力できる状態にしますか？（担当者はそのまま残ります）"):
+            self._reset_fields()
+
+    def _remember_tantou(self):
+        """現在の担当者を保存し、次回起動時に復元できるようにする"""
+        self._settings = remember_tantou(self._settings, self.var_tantou.get())
+        self.combo_tantou["values"] = self._settings["tantou_list"]
+        try:
+            save_settings(self._settings, self._settings_path)
+        except OSError:
+            pass  # 保存できなくても発注書の出力は続けられる
 
     # ──────────────────────────────────────────
     # トグル処理
@@ -237,6 +284,8 @@ class MainWindow:
             messagebox.showerror("入力エラー", "\n".join(errors))
             return None
 
+        self._remember_tantou()
+
         return OrderSpec(
             customer=customer,
             property_name=self.var_property.get().strip(),
@@ -256,6 +305,7 @@ class MainWindow:
             hassou_date=self.var_hassou_date.get().strip(),
             bikou=" ".join(self.var_bikou.get().split()),
             tana_count=int(self.var_tana_count.get()),
+            tantou=self.var_tantou.get().strip(),
         )
 
     # ──────────────────────────────────────────

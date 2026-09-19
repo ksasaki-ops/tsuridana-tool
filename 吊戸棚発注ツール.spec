@@ -23,6 +23,7 @@ exe = EXE(
     a.datas,
     [],
     name='吊戸棚発注ツール',
+    icon='assets/tsuridana.ico',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

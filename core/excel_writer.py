@@ -42,6 +42,10 @@ def generate_excel(spec: OrderSpec, output_path: str | None = None) -> str:
     # L4: 発注日
     ws["L4"].value = f"発注日：{spec.hassou_date}"
 
+    # K9: 自社担当者（会社情報ブロックの空き行）
+    if spec.tantou:
+        ws["K9"].value = f"担当：{spec.tantou}"
+
     wb.save(output_path)
     wb.close()
 

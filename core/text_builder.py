@@ -25,6 +25,7 @@ class OrderSpec:
     hassou_date: str = ""   # 発注日
     bikou: str = ""         # 備考
     tana_count: int = 1     # 棚板枚数（1〜4）
+    tantou: str = ""        # 自社の発注担当者
 
 
 # フィラー → テキスト変換
